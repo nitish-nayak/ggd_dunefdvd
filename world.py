@@ -7,9 +7,6 @@ import gegede.builder
 from utils import *
 
 class WorldBuilder(gegede.builder.Builder):
-    def __init__(self, name):
-        super(WorldBuilder, self).__init__(name)
-
     def configure(self, **kwds):
         if not set(kwds).issubset(globals.World): # no unknown keywords
             msg = 'Unknown parameter in: "%s"' % (', '.join(sorted(kwds.keys())), )
