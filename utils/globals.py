@@ -2,240 +2,241 @@ import sys
 from gegede import Quantity as Q
 
 class Params:
-    def __init__(self):
-        # defaults
-        self.params = {}
-        self.World = None
-        self.TPC = None
-        self.Cryostat = None
-        self.Detenc = None
-        self.Fieldcage = None
-        self.Cathode = None
-        self.Arapuca = None
+    _params = {}
+    _world = {}
+    _tpc = {}
+    _cryostat = {}
+    _detenc = {}
+    _fieldcage = {}
+    _cathode = {}
+    _arapuca = {}
+
+    # set the long list of defaults
+    _world['FieldCage_switch'] = True
+    _world['Cathode_switch'] = True
+    _world['workspace'] = 0
+    _world['pdsconfig'] = 0
+    _world['wires'] = True
+    _world['tpc'] = True
+
+    _tpc['nChans'] = {'Ind1': 286, 'Ind1Bot': 96, 'Ind2': 286, 'Col': 292}
+    _tpc['wirePitchU'] = Q('0.765cm')
+    _tpc['wirePitchV'] = Q('0.765cm')
+    _tpc['wirePitchZ'] = Q('0.51cm')
+    _tpc['wireAngleU'] = Q('150.0deg')
+    _tpc['wireAngleV'] = Q('30.0deg')
+    _tpc['widthPCBActive'] = Q('167.7006cm')
+    _tpc['borderCRM'] = Q('0.0cm')
+    _tpc['borderCRP'] = Q('0.5cm')
+    _tpc['nCRM_x'] = 4*2
+    _tpc['nCRM_z'] = 20*2
+    _tpc['driftTPCActive'] = Q('650.0cm')
+    _tpc['padWidth'] = Q('0.02cm')
+
+    _cryostat['Argon_x'] = Q('1510cm')
+    _cryostat['Argon_y'] = Q('1510cm')
+    _cryostat['Argon_z'] = Q('6200cm')
+    _cryostat['HeightGaseousAr'] = Q('100cm')
+    _cryostat['SteelThickness'] = Q('0.12cm') # membrane
+
+    _detenc['SteelSupport_x'] = Q('100cm')
+    _detenc['SteelSupport_y'] = Q('100cm')
+    _detenc['SteelSupport_z'] = Q('100cm')
+    _detenc['FoamPadding'] = Q('80cm')
+    _detenc['FracMassOfSteel'] = 0.5
+    _detenc['SpaceSteelSupportToWall']    = Q('100cm')
+    _detenc['SpaceSteelSupportToCeiling'] = Q('100cm')
+    _detenc['RockThickness'] = Q('4000cm')
+
+    _fieldcage['FieldShaperInnerRadius'] = Q('0.5cm')
+    _fieldcage['FieldShaperOuterRadius'] = Q('2.285cm')
+    _fieldcage['FieldShaperOuterRadiusSlim'] = Q('0.75cm')
+    _fieldcage['FieldShaperTorRad'] = Q('2.3cm')
+    _fieldcage['FieldCageArapucaWindowLength'] = Q('670cm')
+    _fieldcage['FieldShaperSeparation'] = Q('6.0cm')
+
+    _cathode['heightCathode'] = Q('4.0cm')
+    _cathode['CathodeBorder'] = Q('4.0cm')
+    _cathode['widthCathodeVoid'] = Q('76.35cm')
+    _cathode['lengthCathodeVoid'] = Q('67.0cm')
+
+    _arapuca['ArapucaOut_x'] = Q('65.0cm')
+    _arapuca['ArapucaOut_y'] = Q('2.5cm')
+    _arapuca['ArapucaOut_z'] = Q('65.0cm')
+    _arapuca['ArapucaIn_x'] = Q('60.0cm')
+    _arapuca['ArapucaIn_y'] = Q('2.0cm')
+    _arapuca['ArapucaIn_z'] = Q('60.0cm')
+    _arapuca['ArapucaAcceptanceWindow_x'] = Q('60.0cm')
+    _arapuca['ArapucaAcceptanceWindow_y'] = Q('1.0cm')
+    _arapuca['ArapucaAcceptanceWindow_z'] = Q('60.0cm')
+    _arapuca['GapPD'] = Q('0.5cm')
+    _arapuca['FrameToArapucaSpace'] = Q('1.0cm')
+    _arapuca['FrameToArapucaSpaceLat'] = Q('10.0cm')
+    _arapuca['VerticalPDdist'] = Q('75.0cm')
+    _arapuca['FirstFrameVertDist'] = Q('40.0cm')
+
+    _params.update(_world)
+    _params.update(_tpc)
+    _params.update(_cryostat)
+    _params.update(_detenc)
+    _params.update(_fieldcage)
+    _params.update(_cathode)
+    _params.update(_arapuca)
 
     @property
     def World(self):
-        return self.world
-
+        return type(self)._world
     @World.setter
     def World(self, inputdict):
-        self.world = {}
-        self.world['FieldCage_switch'] = True
-        self.world['Cathode_switch'] = True
-        self.world['workspace'] = 0
-        self.world['pdsconfig'] = 0
-        self.world['wires'] = True
-        self.world['tpc'] = True
         if inputdict:
-            self.world.update(inputdict)
-        self.params.update(self.world)
-
+            type(self)._world.update(inputdict)
+        type(self)._params.update(type(self)._world)
 
     @property
     def TPC(self):
-        return self.tpc
-
+        return type(self)._tpc
     @TPC.setter
     def TPC(self, inputdict):
-        self.tpc = {}
-        self.tpc['nChans'] = {'Ind1': 286, 'Ind1Bot': 96, 'Ind2': 286, 'Col': 292}
-
-        self.tpc['wirePitchU'] = Q('0.765cm')
-        self.tpc['wirePitchV'] = Q('0.765cm')
-        self.tpc['wirePitchZ'] = Q('0.51cm')
-
-        self.tpc['wireAngleU'] = Q('150.0deg')
-        self.tpc['wireAngleV'] = Q('30.0deg')
-
-        self.tpc['widthPCBActive'] = Q('167.7006cm')
-        self.tpc['borderCRM'] = Q('0.0cm')
-        self.tpc['borderCRP'] = Q('0.5cm')
-
-        self.tpc['nCRM_x'] = 4*2
-        self.tpc['nCRM_z'] = 20*2
-
-        self.tpc['driftTPCActive'] = Q('650.0cm')
-        self.tpc['padWidth'] = Q('0.02cm')
         if inputdict:
-            self.tpc.update(inputdict)
-        self.tpc['nViews'] = len(self.tpc['nChans'])
-        self.tpc['lengthPCBActive'] = self.tpc['wirePitchZ'] * self.tpc['nChans']['Col']
-        self.tpc['widthCRM_active'] = self.tpc['widthPCBActive']
-        self.tpc['lengthCRM_active'] = self.tpc['lengthPCBActive']
-        self.tpc['widthCRM'] = self.tpc['widthPCBActive'] + 2 * self.tpc['borderCRM']
-        self.tpc['lengthCRM'] = self.tpc['lengthPCBActive'] + 2 * self.tpc['borderCRM']
-
-        if self.world['workspace'] == 1:
-            self.tpc['nCRM_x'] = 1 * 2
-            self.tpc['nCRM_z'] = 1 * 2
-        if self.world['workspace'] == 2:
-            self.tpc['nCRM_x'] = 2 * 2
-            self.tpc['nCRM_z'] = 2 * 2
-        if self.world['workspace'] == 3:
-            self.tpc['nCRM_x'] = 4 * 2
-            self.tpc['nCRM_z'] = 3 * 2
-        if self.world['workspace'] == 4:
-            self.tpc['nCRM_x'] = 4 * 2
-            self.tpc['nCRM_z'] = 7 * 2
-        if self.world['workspace'] == 5:
-            self.tpc['nCRM_x'] = 4 * 2
-            self.tpc['nCRM_z'] = 20 * 2
-
-        self.tpc['widthTPCActive'] = self.tpc['nCRM_x'] * (self.tpc['widthCRM'] + self.tpc['borderCRP'])
-        self.tpc['lengthTPCActive'] = self.tpc['nCRM_z'] * (self.tpc['lengthCRM'] + self.tpc['borderCRP'])
-        self.tpc['ReadoutPlane'] = self.tpc['nViews'] * self.tpc['padWidth']
-        self.tpc['anodePlateWidth'] = self.tpc['padWidth']/2.
-
-        self.params.update(self.tpc)
-
+            type(self)._tpc.update(inputdict)
+        type(self)._params.update(type(self)._tpc)
 
     @property
     def Cryostat(self):
-        return self.cryostat
-
+        return type(self)._cryostat
     @Cryostat.setter
     def Cryostat(self, inputdict):
-        self.cryostat = {}
-        self.cryostat['Argon_x'] = Q('1510cm')
-        self.cryostat['Argon_y'] = Q('1510cm')
-        self.cryostat['Argon_z'] = Q('6200cm')
-        self.cryostat['HeightGaseousAr'] = Q('100cm')
-        self.cryostat['SteelThickness'] = Q('0.12cm') # membrane
         if inputdict:
-            self.cryostat.update(inputdict)
-        if self.world['workspace'] != 0:
-            self.cryostat['Argon_x'] = self.tpc['driftTPCActive'] + self.cryostat['HeightGaseousAr'] + self.tpc['ReadoutPlane'] + Q('100cm')
-            self.cryostat['Argon_y'] = self.tpc['widthTPCActive'] + Q('162cm')
-            self.cryostat['Argon_z'] = self.tpc['lengthTPCActive'] + Q('214.0cm')
-        self.cryostat['xLArBuffer'] = self.cryostat['Argon_x'] - self.tpc['driftTPCActive'] - self.cryostat['HeightGaseousAr'] - self.tpc['ReadoutPlane']
-        self.cryostat['yLArBuffer'] = 0.5 * (self.cryostat['Argon_y'] - self.tpc['widthTPCActive'])
-        self.cryostat['zLArBuffer'] = 0.5 * (self.cryostat['Argon_z'] - self.tpc['lengthTPCActive'])
-
-        self.cryostat['Cryostat_x'] = self.cryostat['Argon_x'] + 2*self.cryostat['SteelThickness']
-        self.cryostat['Cryostat_y'] = self.cryostat['Argon_y'] + 2*self.cryostat['SteelThickness']
-        self.cryostat['Cryostat_z'] = self.cryostat['Argon_z'] + 2*self.cryostat['SteelThickness']
-
-        self.params.update(self.cryostat)
+            type(self)._cryostat.update(inputdict)
+        type(self)._params.update(type(self)._cryostat)
 
     @property
     def Enclosure(self):
-        return self.detenc
-
+        return type(self)._detenc
     @Enclosure.setter
     def Enclosure(self, inputdict):
-        self.detenc = {}
-        self.detenc['SteelSupport_x'] = Q('100cm')
-        self.detenc['SteelSupport_y'] = Q('100cm')
-        self.detenc['SteelSupport_z'] = Q('100cm')
-        self.detenc['FoamPadding'] = Q('80cm')
-        self.detenc['FracMassOfSteel'] = 0.5
-        self.detenc['SpaceSteelSupportToWall']    = Q('100cm')
-        self.detenc['SpaceSteelSupportToCeiling'] = Q('100cm')
-        self.detenc['RockThickness'] = Q('4000cm')
         if inputdict:
-            self.detenc.update(inputdict)
-        self.detenc['FracMassOfAir'] = 1 - self.detenc['FracMassOfSteel']
-        self.detenc['DetEncX']  =    self.cryostat['Cryostat_x'] + 2*(self.detenc['SteelSupport_x'] + self.detenc['FoamPadding']) + self.detenc['SpaceSteelSupportToCeiling']
-
-        self.detenc['DetEncY']  =    self.cryostat['Cryostat_y'] + 2*(self.detenc['SteelSupport_y'] + self.detenc['FoamPadding']) + 2*self.detenc['SpaceSteelSupportToWall']
-
-        self.detenc['DetEncZ']  =    self.cryostat['Cryostat_z'] + 2*(self.detenc['SteelSupport_z'] + self.detenc['FoamPadding']) + 2*self.detenc['SpaceSteelSupportToWall']
-
-        self.detenc['posCryoInDetEnc_x'] = - self.detenc['DetEncX']/2 + self.detenc['SteelSupport_x'] + self.detenc['FoamPadding'] + self.cryostat['Cryostat_x']/2
-
-        self.detenc['OriginXSet'] =  self.detenc['DetEncX']/2.0 - self.detenc['SteelSupport_x'] - self.detenc['FoamPadding'] - self.cryostat['SteelThickness'] - self.cryostat['xLArBuffer'] - self.tpc['driftTPCActive']/2.0
-
-        self.detenc['OriginYSet'] =   self.detenc['DetEncY']/2.0 - self.detenc['SpaceSteelSupportToWall'] - self.detenc['SteelSupport_y'] - self.detenc['FoamPadding'] - self.cryostat['SteelThickness'] - self.cryostat['yLArBuffer'] - self.tpc['widthTPCActive']/2.0
-
-        self.detenc['OriginZSet'] =   self.detenc['DetEncZ']/2.0 - self.detenc['SpaceSteelSupportToWall'] - self.detenc['SteelSupport_z'] - self.detenc['FoamPadding'] - self.cryostat['SteelThickness'] - self.cryostat['zLArBuffer'] - self.tpc['borderCRM']
-
-        self.params.update(self.detenc)
+            type(self)._detenc.update(inputdict)
+        type(self)._params.update(type(self)._detenc)
 
     @property
     def FieldCage(self):
-        return self.fieldcage
-
+        return type(self)._fieldcage
     @FieldCage.setter
     def FieldCage(self, inputdict):
-        self.fieldcage = {}
-        self.fieldcage['FieldShapeInnerRadius'] = Q('0.5cm')
-        self.fieldcage['FieldShapeOuterRadius'] = Q('2.285cm')
-        self.fieldcage['FieldShapeOuterRadiusSlim'] = Q('0.75cm')
-        self.fieldcage['FieldShapeTorRad'] = Q('2.3cm')
-        self.fieldcage['FieldShapeArapucaWindowLength'] = Q('670cm')
-        self.fieldcage['FieldShaperSeparation'] = Q('6.0cm')
         if inputdict:
-            self.fieldcage.update(inputdict)
-        self.fieldcage['FieldShaperLongTubeLength']  =  self.tpc['lengthTPCActive']
-        self.fieldcage['FieldShaperShortTubeLength'] =  self.tpc['widthTPCActive']
-        self.fieldcage['FieldShaperLength'] = self.fieldcage['FieldShaperLongTubeLength'] + 2*self.fieldcage['FieldShaperOuterRadius']+ 2*self.fieldcage['FieldShaperTorRad']
-        self.fieldcage['FieldShaperWidth'] =  self.fieldcage['FieldShaperShortTubeLength'] + 2*self.fieldcage['FieldShaperOuterRadius']+ 2*self.fieldcage['FieldShaperTorRad']
-
-        self.fieldcage['NFieldShapers'] = (self.tpc['driftTPCActive']/self.fieldcage['FieldShaperSeparation']) - 1
-
-        self.fieldcage['FieldCageSizeX'] = self.fieldcage['FieldShaperSeparation']*self.fieldcage['NFieldShapers']+2
-        self.fieldcage['FieldCageSizeY'] = self.fieldcage['FieldShaperWidth']+2
-        self.fieldcage['FieldCageSizeZ'] = self.fieldcage['FieldShaperLength']+2
-
-        self.params.update(self.fieldcage)
+            type(self)._fieldcage.update(inputdict)
+        type(self)._params.update(type(self)._fieldcage)
 
     @property
     def Cathode(self):
-        return self.cathode
-
+        return type(self)._cathode
     @Cathode.setter
     def Cathode(self, inputdict):
-        self.cathode = {}
-        self.cathode['heightCathode'] = Q('4.0cm')
-        self.cathode['CathodeBorder'] = Q('4.0cm')
-        self.cathode['widthCathodeVoid'] = Q('76.35cm')
-        self.cathode['lengthCathodeVoid'] = Q('67.0cm')
         if inputdict:
-            self.cathode.update(inputdict)
-        self.cathode['widthCathode'] =2*self.tpc['widthCRM']
-        self.cathode['lengthCathode']=2*self.tpc['lengthCRM']
-
-        self.params.update(self.cathode)
+            type(self)._cathode.update(inputdict)
+        type(self)._params.update(type(self)._cathode)
 
     @property
     def Arapuca(self):
-        return self.arapuca
-
+        return type(self)._arapuca
     @Arapuca.setter
     def Arapuca(self, inputdict):
-        self.arapuca = {}
-        self.arapuca['ArapucaOut_x'] = Q('65.0cm')
-        self.arapuca['ArapucaOut_y'] = Q('2.5cm')
-        self.arapuca['ArapucaOut_z'] = Q('65.0cm')
-        self.arapuca['ArapucaIn_x'] = Q('60.0cm')
-        self.arapuca['ArapucaIn_y'] = Q('2.0cm')
-        self.arapuca['ArapucaIn_z'] = Q('60.0cm')
-        self.arapuca['ArapucaAcceptanceWindow_x'] = Q('60.0cm')
-        self.arapuca['ArapucaAcceptanceWindow_y'] = Q('1.0cm')
-        self.arapuca['ArapucaAcceptanceWindow_z'] = Q('60.0cm')
-        self.arapuca['GapPD'] = Q('0.5cm')
-        self.arapuca['FrameToArapucaSpace'] = Q('1.0cm')
-        self.arapuca['FrameToArapucaSpaceLat'] = Q('10.0cm')
-        self.arapuca['VerticalPDdist'] = Q('75.0cm')
-        self.arapuca['FirstFrameVertDist'] = Q('40.0cm')
         if inputdict:
-            self.arapuca.update(inputdict)
-        self.arapuca['list_posx_bot'] = [0]*4
-        self.arapuca['list_posz_bot'] = [0]*4
+            type(self)._arapuca.update(inputdict)
+        type(self)._params.update(type(self)._arapuca)
 
-        self.arapuca['list_posx_bot'][0]=-2*self.cathode['widthCathodeVoid'] - 2.0*self.cathode['CathodeBorder'] + self.arapuca['GapPD'] + 0.5*self.arapuca['ArapucaOut_x']
-        self.arapuca['list_posz_bot'][0]= 0.5*self.cathode['lengthCathodeVoid'] + self.cathode['CathodeBorder']
-        self.arapuca['list_posx_bot'][1]= - self.cathode['CathodeBorder'] - self.arapuca['GapPD'] - 0.5*self.arapuca['ArapucaOut_x']
-        self.arapuca['list_posz_bot'][1]=-1.5*self.cathode['lengthCathodeVoid'] - 2.0*self.cathode['CathodeBorder']
-        self.arapuca['list_posx_bot'][2]=-self.arapuca['list_posx_bot'][1]
-        self.arapuca['list_posz_bot'][2]=-self.arapuca['list_posz_bot'][1]
-        self.arapuca['list_posx_bot'][3]=-self.arapuca['list_posx_bot'][0]
-        self.arapuca['list_posz_bot'][3]=-self.arapuca['list_posz_bot'][0]
+    def SetDerived(self):
+        type(self)._tpc['nViews'] = len(type(self)._tpc['nChans'])
+        type(self)._tpc['lengthPCBActive'] = type(self)._tpc['wirePitchZ'] * type(self)._tpc['nChans']['Col']
+        type(self)._tpc['widthCRM_active'] = type(self)._tpc['widthPCBActive']
+        type(self)._tpc['lengthCRM_active'] = type(self)._tpc['lengthPCBActive']
+        type(self)._tpc['widthCRM'] = type(self)._tpc['widthPCBActive'] + 2 * type(self)._tpc['borderCRM']
+        type(self)._tpc['lengthCRM'] = type(self)._tpc['lengthPCBActive'] + 2 * type(self)._tpc['borderCRM']
 
-        self.params.update(self.arapuca)
+        if type(self)._world['workspace'] == 1:
+            type(self)._tpc['nCRM_x'] = 1 * 2
+            type(self)._tpc['nCRM_z'] = 1 * 2
+        if type(self)._world['workspace'] == 2:
+            type(self)._tpc['nCRM_x'] = 2 * 2
+            type(self)._tpc['nCRM_z'] = 2 * 2
+        if type(self)._world['workspace'] == 3:
+            type(self)._tpc['nCRM_x'] = 4 * 2
+            type(self)._tpc['nCRM_z'] = 3 * 2
+        if type(self)._world['workspace'] == 4:
+            type(self)._tpc['nCRM_x'] = 4 * 2
+            type(self)._tpc['nCRM_z'] = 7 * 2
+        if type(self)._world['workspace'] == 5:
+            type(self)._tpc['nCRM_x'] = 4 * 2
+            type(self)._tpc['nCRM_z'] = 20 * 2
+
+        type(self)._tpc['widthTPCActive'] = type(self)._tpc['nCRM_x'] * (type(self)._tpc['widthCRM'] + type(self)._tpc['borderCRP'])
+        type(self)._tpc['lengthTPCActive'] = type(self)._tpc['nCRM_z'] * (type(self)._tpc['lengthCRM'] + type(self)._tpc['borderCRP'])
+        type(self)._tpc['ReadoutPlane'] = type(self)._tpc['nViews'] * type(self)._tpc['padWidth']
+        type(self)._tpc['anodePlateWidth'] = type(self)._tpc['padWidth']/2.
+
+        type(self)._params.update(type(self)._tpc)
+
+        if type(self)._world['workspace'] != 0:
+            type(self)._cryostat['Argon_x'] = type(self)._tpc['driftTPCActive'] + type(self)._cryostat['HeightGaseousAr'] + type(self)._tpc['ReadoutPlane'] + Q('100cm')
+            type(self)._cryostat['Argon_y'] = type(self)._tpc['widthTPCActive'] + Q('162cm')
+            type(self)._cryostat['Argon_z'] = type(self)._tpc['lengthTPCActive'] + Q('214.0cm')
+        type(self)._cryostat['xLArBuffer'] = type(self)._cryostat['Argon_x'] - type(self)._tpc['driftTPCActive'] - type(self)._cryostat['HeightGaseousAr'] - type(self)._tpc['ReadoutPlane']
+        type(self)._cryostat['yLArBuffer'] = 0.5 * (type(self)._cryostat['Argon_y'] - type(self)._tpc['widthTPCActive'])
+        type(self)._cryostat['zLArBuffer'] = 0.5 * (type(self)._cryostat['Argon_z'] - type(self)._tpc['lengthTPCActive'])
+
+        type(self)._cryostat['Cryostat_x'] = type(self)._cryostat['Argon_x'] + 2*type(self)._cryostat['SteelThickness']
+        type(self)._cryostat['Cryostat_y'] = type(self)._cryostat['Argon_y'] + 2*type(self)._cryostat['SteelThickness']
+        type(self)._cryostat['Cryostat_z'] = type(self)._cryostat['Argon_z'] + 2*type(self)._cryostat['SteelThickness']
+
+        type(self)._params.update(type(self)._cryostat)
+
+        type(self)._detenc['FracMassOfAir'] = 1 - type(self)._detenc['FracMassOfSteel']
+        type(self)._detenc['DetEncX']  =    type(self)._cryostat['Cryostat_x'] + 2*(type(self)._detenc['SteelSupport_x'] + type(self)._detenc['FoamPadding']) + type(self)._detenc['SpaceSteelSupportToCeiling']
+        type(self)._detenc['DetEncY']  =    type(self)._cryostat['Cryostat_y'] + 2*(type(self)._detenc['SteelSupport_y'] + type(self)._detenc['FoamPadding']) + 2*type(self)._detenc['SpaceSteelSupportToWall']
+        type(self)._detenc['DetEncZ']  =    type(self)._cryostat['Cryostat_z'] + 2*(type(self)._detenc['SteelSupport_z'] + type(self)._detenc['FoamPadding']) + 2*type(self)._detenc['SpaceSteelSupportToWall']
+        type(self)._detenc['posCryoInDetEnc_x'] = - type(self)._detenc['DetEncX']/2 + type(self)._detenc['SteelSupport_x'] + type(self)._detenc['FoamPadding'] + type(self)._cryostat['Cryostat_x']/2
+
+        type(self)._detenc['OriginXSet'] =  type(self)._detenc['DetEncX']/2.0 - type(self)._detenc['SteelSupport_x'] - type(self)._detenc['FoamPadding'] - type(self)._cryostat['SteelThickness'] - type(self)._cryostat['xLArBuffer'] - type(self)._tpc['driftTPCActive']/2.0
+        type(self)._detenc['OriginYSet'] =   type(self)._detenc['DetEncY']/2.0 - type(self)._detenc['SpaceSteelSupportToWall'] - type(self)._detenc['SteelSupport_y'] - type(self)._detenc['FoamPadding'] - type(self)._cryostat['SteelThickness'] - type(self)._cryostat['yLArBuffer'] - type(self)._tpc['widthTPCActive']/2.0
+        type(self)._detenc['OriginZSet'] =   type(self)._detenc['DetEncZ']/2.0 - type(self)._detenc['SpaceSteelSupportToWall'] - type(self)._detenc['SteelSupport_z'] - type(self)._detenc['FoamPadding'] - type(self)._cryostat['SteelThickness'] - type(self)._cryostat['zLArBuffer'] - type(self)._tpc['borderCRM']
+
+        type(self)._params.update(type(self)._detenc)
+
+        type(self)._fieldcage['FieldShaperLongTubeLength']  =  type(self)._tpc['lengthTPCActive']
+        type(self)._fieldcage['FieldShaperShortTubeLength'] =  type(self)._tpc['widthTPCActive']
+        type(self)._fieldcage['FieldShaperLength'] = type(self)._fieldcage['FieldShaperLongTubeLength'] + 2*type(self)._fieldcage['FieldShaperOuterRadius']+ 2*type(self)._fieldcage['FieldShaperTorRad']
+        type(self)._fieldcage['FieldShaperWidth'] =  type(self)._fieldcage['FieldShaperShortTubeLength'] + 2*type(self)._fieldcage['FieldShaperOuterRadius']+ 2*type(self)._fieldcage['FieldShaperTorRad']
+
+        type(self)._fieldcage['NFieldShapers'] = (type(self)._tpc['driftTPCActive']/type(self)._fieldcage['FieldShaperSeparation']) - 1
+
+        type(self)._fieldcage['FieldCageSizeX'] = type(self)._fieldcage['FieldShaperSeparation']*type(self)._fieldcage['NFieldShapers']+Q('2cm')
+        type(self)._fieldcage['FieldCageSizeY'] = type(self)._fieldcage['FieldShaperWidth']+Q('2cm')
+        type(self)._fieldcage['FieldCageSizeZ'] = type(self)._fieldcage['FieldShaperLength']+Q('2cm')
+
+        type(self)._params.update(type(self)._fieldcage)
+
+        type(self)._cathode['widthCathode'] =2*type(self)._tpc['widthCRM']
+        type(self)._cathode['lengthCathode']=2*type(self)._tpc['lengthCRM']
+
+        type(self)._params.update(type(self)._cathode)
+
+        type(self)._arapuca['list_posx_bot'] = [0]*4
+        type(self)._arapuca['list_posz_bot'] = [0]*4
+
+        type(self)._arapuca['list_posx_bot'][0]=-2*type(self)._cathode['widthCathodeVoid'] - 2.0*type(self)._cathode['CathodeBorder'] + type(self)._arapuca['GapPD'] + 0.5*type(self)._arapuca['ArapucaOut_x']
+        type(self)._arapuca['list_posz_bot'][0]= 0.5*type(self)._cathode['lengthCathodeVoid'] + type(self)._cathode['CathodeBorder']
+        type(self)._arapuca['list_posx_bot'][1]= - type(self)._cathode['CathodeBorder'] - type(self)._arapuca['GapPD'] - 0.5*type(self)._arapuca['ArapucaOut_x']
+        type(self)._arapuca['list_posz_bot'][1]=-1.5*type(self)._cathode['lengthCathodeVoid'] - 2.0*type(self)._cathode['CathodeBorder']
+        type(self)._arapuca['list_posx_bot'][2]=-type(self)._arapuca['list_posx_bot'][1]
+        type(self)._arapuca['list_posz_bot'][2]=-type(self)._arapuca['list_posz_bot'][1]
+        type(self)._arapuca['list_posx_bot'][3]=-type(self)._arapuca['list_posx_bot'][0]
+        type(self)._arapuca['list_posz_bot'][3]=-type(self)._arapuca['list_posz_bot'][0]
+
+        type(self)._params.update(type(self)._arapuca)
 
     def get(self, key):
-        if key not in self.params:
-            print("Unable to access requested parameter. Exiting")
+        if key not in type(self)._params:
+            print("Unable to access requested parameter. Maybe you need to call SetDerived(). Exiting")
             sys.exit(1)
-        return self.params[key]
+        return type(self)._params[key]
