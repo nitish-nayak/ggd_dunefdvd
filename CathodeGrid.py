@@ -1,5 +1,3 @@
-
-
 #!/usr/bin/env python
 '''
 CathodeGrid builder for DUNE FD-VD
