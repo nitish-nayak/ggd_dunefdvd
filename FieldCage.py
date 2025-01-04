@@ -76,13 +76,19 @@ class FieldCageBuilder(gegede.builder.Builder):
                                                dz = globals.get("FieldShaperLongTubeLength"),
                                                sphi = Q("0deg"),
                                                dphi = Q("360deg"))
+        fieldshapershortTube = geom.shapes.Tubs("FieldShaperShorttube",
+                                                rmin = globals.get("FieldShaperInnerRadius"),
+                                                rmax = globals.get("FieldShaperOuterRadius"),
+                                                dz = globals.get("FieldShaperShortTubeLength"),
+                                                sphi = Q("0deg"),
+                                                dphi = Q("360deg"))
         fieldshaperlongTubeSlim = geom.shapes.Tubs("FieldShaperLongtubeSlim",
                                                    rmin = globals.get("FieldShaperInnerRadius"),
                                                    rmax = globals.get("FieldShaperOuterRadiusSlim"),
                                                    dz = globals.get("FieldShaperLongTubeLength"),
                                                    sphi = Q("0deg"),
                                                    dphi = Q("360deg"))
-        fieldshapershortTube = self.constructShortTubeSlim(geom)
+        fieldshapershortTubeSlim = self.constructShortTubeSlim(geom)
 
         stlength = globals.get("FieldShaperShortTubeLength")
         ltlength = globals.get("FieldShaperLongTubeLength")
