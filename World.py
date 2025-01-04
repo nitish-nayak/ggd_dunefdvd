@@ -27,12 +27,12 @@ class WorldBuilder(gegede.builder.Builder):
 
         # create the world box
         worldBox = geom.shapes.Box(self.name,
-                                dx=globals.get("DetEncX")+2*globals.get("RockThickness"),
-                                dy=globals.get("DetEncY")+2*globals.get("RockThickness"),
-                                dz=globals.get("DetEncZ")+2*globals.get("RockThickness"))
+                                   dx=globals.get("DetEncX")+2*globals.get("RockThickness"),
+                                   dy=globals.get("DetEncY")+2*globals.get("RockThickness"),
+                                   dz=globals.get("DetEncZ")+2*globals.get("RockThickness"))
 
         # put it in the world volume
-        worldLV = geom.structure.Volume('vol'+self.name, material=m_dusel_rock, shape=worldBox)
+        worldLV = geom.structure.Volume('vol'+self.name, material="DUSEL_Rock", shape=worldBox)
         self.add_volume(worldLV)
 
         # get the detector enclosure sub-builder

@@ -22,7 +22,7 @@ class DetEnclosureBuilder(gegede.builder.Builder):
                                     dx=globals.get("DetEncX"),
                                     dy=globals.get("DetEncY"),
                                     dz=globals.get("DetEncZ"))
-        detencLV = geom.structure.Volume('vol'+self.name, material=m_air, shape=detencBox)
+        detencLV = geom.structure.Volume('vol'+self.name, material="Air", shape=detencBox)
         self.add_volume(detencLV)
 
         # get the cryostat volume from the subbuilder and place it
@@ -30,20 +30,20 @@ class DetEnclosureBuilder(gegede.builder.Builder):
         cryostatLV = cryostat.get_volume()
         cryostat_place = geom.structure.Placement('place'+cryostat.name,
                                                   volume = cryostatLV,
-                                                  pos = posCryoInDetEnc)
+                                                  pos = "posCryoInDetEnc")
         detencLV.placements.append(cryostat_place.name)
 
         # get the outer structure volumes
-        FoamPadBlockBox = geom.shapes.Box('FoamPadBlock',
+        foampadblockBox = geom.shapes.Box('FoamPadBlock',
                                           dx=globals.get("Cryostat_x") + 2*globals.get("FoamPadding"),
                                           dy=globals.get("Cryostat_y") + 2*globals.get("FoamPadding"),
                                           dz=globals.get("Cryostat_z") + 2*globals.get("FoamPadding"))
-        FoamPaddingBox = geom.shapes.Boolean('FoamPadding',
+        foampaddingBox = geom.shapes.Boolean('FoamPadding',
                                              type = 'subtraction',
-                                             first = FoamPadBlockBox,
+                                             first = foampadblockBox,
                                              second = geom.get_shape(cryostatLV),
                                              pos = posCenter)
-        SteelSupportBlockBox = geom.shapes.Box('SteelSupportBlock',
+        steelsupportblockBox = geom.shapes.Box('SteelSupportBlock',
                                                dx=globals.get("Cryostat_x")    +    \
                                                   2*globals.get("FoamPadding") +    \
                                                   2*globals.get("SteelSupport_x"),
@@ -53,26 +53,26 @@ class DetEnclosureBuilder(gegede.builder.Builder):
                                                dz=globals.get("Cryostat_z")    +    \
                                                   2*globals.get("FoamPadding") +    \
                                                   2*globals.get("SteelSupport_z"))
-        SteelSupportBox = geom.shapes.Boolean('SteelSupport',
+        steelsupportBox = geom.shapes.Boolean('SteelSupport',
                                               type = 'subtraction',
-                                              first = SteelSupportBlockBox,
-                                              second = FoamPadBlockBox,
+                                              first = steelsupportblockBox,
+                                              second = foampadblockBox,
                                               pos = posCenter)
 
-        foampaddingLV = geom.structure.Volume('vol'+FoamPaddingBox.name,
+        foampaddingLV = geom.structure.Volume('vol'+foampaddingBox.name,
                                               material = m_foam_protodune_rpuf_assayedsample,
-                                              shape = FoamPaddingBox)
-        steelsupportLV = geom.structure.Volume('vol'+SteelSupportBox.name,
-                                              m_airsteelmixture,
-                                              shape = SteelSupportBox)
+                                              shape = foampaddingBox)
+        steelsupportLV = geom.structure.Volume('vol'+steelsupportBox.name,
+                                              "AirSteelMixture",
+                                              shape = steelsupportBox)
 
         # define the placements and put it inside the detector enclosure
-        foampadding_place = geom.structure.Placement('place'+FoamPaddingBox.name,
+        foampadding_place = geom.structure.Placement('place'+foampaddingBox.name,
                                                      volume = foampaddingLV,
-                                                     pos = posCryoInDetEnc)
-        steelsupport_place = geom.structure.Placement('place'+SteelSupportBox.name,
+                                                     pos = "posCryoInDetEnc")
+        steelsupport_place = geom.structure.Placement('place'+steelsupportBox.name,
                                                      volume = steelsupportLV,
-                                                     pos = posCryoInDetEnc)
+                                                     pos = "posCryoInDetEnc")
         detencLV.placements.append(foampadding_place.name)
         detencLV.placements.append(steelsupport_place.name)
 
