@@ -2,9 +2,10 @@
 '''
 World builder for DUNE FD-VD
 
-                                       |--> FieldCage
-World -> Enclosure -> Cryostat -> TPC  |--> Cathodes -> Arapucas
-
+                               |--> FieldCage
+World -> Enclosure -> Cryostat |--> TPC -> Various Subcomponents (Planes, Wires, CRMs)
+                               |--> Arapucas
+                               |--> Cathode
 '''
 
 import gegede.builder
