@@ -113,7 +113,7 @@ class FieldCageBuilder(gegede.builder.Builder):
             if ui % 2 == 0 and ui % 4 != 0:
                 secondShape = fieldshaperlongTube
                 secondShapeSlim = fieldshaperlongTubeSlim
-            else:
+            elif ui % 2 == 0:
                 secondShape = fieldshapershortTube
                 secondShapeSlim = fieldshapershortTubeSlim
 
@@ -133,20 +133,20 @@ class FieldCageBuilder(gegede.builder.Builder):
                                              first = unionShape,
                                              second = secondShape,
                                              pos = geom.structure.Position(pos_name,
-                                                                           x = xz_positions[ui][0],
+                                                                           x = xz_positions[ui-1][0],
                                                                            y = Q('0cm'),
-                                                                           z = xz_positions[ui][1]),
-                                             rot = rotations[ui]
+                                                                           z = xz_positions[ui-1][1]),
+                                             rot = rotations[ui-1]
                                              )
             unionShapeSlim = geom.shapes.Boolean(fs_slim_name,
                                                  type = 'union',
                                                  first = unionShapeSlim,
                                                  second = secondShapeSlim,
                                                  pos = geom.structure.Position(pos_name,
-                                                                               x = xz_positions[ui][0],
+                                                                               x = xz_positions[ui-1][0],
                                                                                y = Q('0cm'),
-                                                                               z = xz_positions[ui][1]),
-                                                 rot = rotations[ui]
+                                                                               z = xz_positions[ui-1][1]),
+                                                 rot = rotations[ui-1]
                                                  )
 
         # define the logical volumes
