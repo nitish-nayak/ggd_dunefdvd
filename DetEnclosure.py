@@ -41,7 +41,7 @@ class DetEnclosureBuilder(gegede.builder.Builder):
                                              type = 'subtraction',
                                              first = foampadblockBox,
                                              second = geom.get_shape(cryostatLV),
-                                             pos = posCenter)
+                                             pos = "posCenter")
         steelsupportblockBox = geom.shapes.Box('SteelSupportBlock',
                                                dx=globals.get("Cryostat_x")    +    \
                                                   2*globals.get("FoamPadding") +    \
@@ -56,13 +56,13 @@ class DetEnclosureBuilder(gegede.builder.Builder):
                                               type = 'subtraction',
                                               first = steelsupportblockBox,
                                               second = foampadblockBox,
-                                              pos = posCenter)
+                                              pos = "posCenter")
 
         foampaddingLV = geom.structure.Volume('vol'+foampaddingBox.name,
                                               material = m_foam_protodune_rpuf_assayedsample,
                                               shape = foampaddingBox)
         steelsupportLV = geom.structure.Volume('vol'+steelsupportBox.name,
-                                              "AirSteelMixture",
+                                              material = "AirSteelMixture",
                                               shape = steelsupportBox)
 
         # define the placements and put it inside the detector enclosure
