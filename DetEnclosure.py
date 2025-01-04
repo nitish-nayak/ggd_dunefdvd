@@ -17,7 +17,6 @@ class DetEnclosureBuilder(gegede.builder.Builder):
         globals.Enclosure = kwds
 
     def construct(self, geom):
-
         detencBox = geom.shapes.Box(self.name,
                                     dx=globals.get("DetEncX"),
                                     dy=globals.get("DetEncY"),
@@ -75,5 +74,4 @@ class DetEnclosureBuilder(gegede.builder.Builder):
                                                      pos = "posCryoInDetEnc")
         detencLV.placements.append(foampadding_place.name)
         detencLV.placements.append(steelsupport_place.name)
-
         return
