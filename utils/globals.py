@@ -10,6 +10,8 @@ class Params:
     _fieldcage = {}
     _cathode = {}
     _arapuca = {}
+    # have the derived parameters been calculated yet
+    _hasDerived = False
 
     # set the long list of defaults
     _world['FieldCage_switch'] = True
@@ -156,6 +158,9 @@ class Params:
 
     def SetDerived(self):
         # calculate all the other parameters
+        # accessible only once construction begins
+        if type(self)._hasDerived:
+            return
         type(self)._tpc['nViews'] = len(type(self)._tpc['nChans'])
         type(self)._tpc['lengthPCBActive'] = type(self)._tpc['wirePitchZ'] * type(self)._tpc['nChans']['Col']
         type(self)._tpc['widthCRM_active'] = type(self)._tpc['widthPCBActive']
@@ -200,20 +205,28 @@ class Params:
         type(self)._tpc['lengthTPCActive'] = type(self)._tpc['nCRM_z'] * (type(self)._tpc['lengthCRM'] + type(self)._tpc['borderCRP'])
         type(self)._tpc['ReadoutPlane'] = type(self)._tpc['nViews'] * type(self)._tpc['padWidth']
         type(self)._tpc['anodePlateWidth'] = type(self)._tpc['padWidth']/2.
+        type(self)._tpc['TPCActive_x'] = type(self)._tpc['driftTPCActive']
+        type(self)._tpc['TPCActive_y'] = type(self)._tpc['widthCRM_active']
+        type(self)._tpc['TPCActive_z'] = type(self)._tpc['lengthCRM_active']
+        type(self)._tpc['TPC_x'] = type(self)._tpc['driftTPCActive'] + type(self)._tpc['ReadoutPlane']
+        type(self)._tpc['TPC_y'] = type(self)._tpc['widthCRM']
+        type(self)._tpc['TPC_z'] = type(self)._tpc['lengthCRM']
 
         if type(self)._world['workspace'] != 0:
             if type(self)._tpc['nCRM_x']== 1:
-                type(self)._cryostat['Argon_x'] = type(self)._tpc['driftTPCActive'] + type(self)._cryostat['HeightGaseousAr'] +                     \
+                type(self)._cryostat['Argon_x'] = type(self)._tpc['driftTPCActive'] + type(self)._cryostat['HeightGaseousAr'] +                 \
                                                   type(self)._tpc['ReadoutPlane'] + Q('100cm')
             type(self)._cryostat['Argon_y'] = type(self)._tpc['widthTPCActive'] + Q('162cm')
             type(self)._cryostat['Argon_z'] = type(self)._tpc['lengthTPCActive'] + Q('214.0cm')
 
         if type(self)._tpc['nCRM_x'] == 1:
-            type(self)._cryostat['xLArBuffer'] = type(self)._cryostat['Argon_x'] - type(self)._tpc['driftTPCActive'] -                              \
-                                                 type(self)._cryostat['HeightGaseousAr'] - type(self)._tpc['ReadoutPlane'] - type(self)._cathode['heightCathode']
+            type(self)._cryostat['xLArBuffer'] = type(self)._cryostat['Argon_x'] - type(self)._tpc['driftTPCActive'] -                          \
+                                                 type(self)._cryostat['HeightGaseousAr'] - type(self)._tpc['ReadoutPlane'] -                    \
+                                                 type(self)._cathode['heightCathode']
         else:
-            type(self)._cryostat['xLArBuffer'] = type(self)._cryostat['Argon_x'] - 2*type(self)._tpc['driftTPCActive'] -                              \
-                                                 type(self)._cryostat['HeightGaseousAr'] - 2*type(self)._tpc['ReadoutPlane'] - type(self)._cathode('heightCathode')
+            type(self)._cryostat['xLArBuffer'] = type(self)._cryostat['Argon_x'] - 2*type(self)._tpc['driftTPCActive'] -                        \
+                                                 type(self)._cryostat['HeightGaseousAr'] - 2*type(self)._tpc['ReadoutPlane'] -                  \
+                                                 type(self)._cathode['heightCathode']
         type(self)._cryostat['yLArBuffer'] = 0.5 * (type(self)._cryostat['Argon_y'] - type(self)._tpc['widthTPCActive'])
         type(self)._cryostat['zLArBuffer'] = 0.5 * (type(self)._cryostat['Argon_z'] - type(self)._tpc['lengthTPCActive'])
         type(self)._cryostat['Cryostat_x'] = type(self)._cryostat['Argon_x'] + 2*type(self)._cryostat['SteelThickness']
@@ -265,13 +278,14 @@ class Params:
         type(self)._fieldcage['FieldShaperWidth'] =  type(self)._fieldcage['FieldShaperShortTubeLength'] +                                      \
                                                      2*type(self)._fieldcage['FieldShaperOuterRadius'] +                                        \
                                                      2*type(self)._fieldcage['FieldShaperTorRad']
-        type(self)._fieldcage['NFieldShapers'] = (type(self)._tpc['driftTPCActive']/type(self)._fieldcage['FieldShaperSeparation']) - 1
-        type(self)._fieldcage['FieldCageSizeX'] = type(self)._fieldcage['FieldShaperSeparation']*type(self)._fieldcage['NFieldShapers']+Q('2cm')
-        type(self)._fieldcage['FieldCageSizeY'] = type(self)._fieldcage['FieldShaperWidth']+Q('2cm')
-        type(self)._fieldcage['FieldCageSizeZ'] = type(self)._fieldcage['FieldShaperLength']+Q('2cm')
+        type(self)._fieldcage['NFieldShapers']  = (type(self)._tpc['driftTPCActive']/type(self)._fieldcage['FieldShaperSeparation']) - 1
+        type(self)._fieldcage['FieldCageSizeX'] = type(self)._fieldcage['FieldShaperSeparation']*type(self)._fieldcage['NFieldShapers'] +       \
+                                                  Q('2cm')
+        type(self)._fieldcage['FieldCageSizeY'] = type(self)._fieldcage['FieldShaperWidth'] + Q('2cm')
+        type(self)._fieldcage['FieldCageSizeZ'] = type(self)._fieldcage['FieldShaperLength'] + Q('2cm')
 
 
-        type(self)._cathode['widthCathode'] =2*(type(self)._tpc['widthCRM'] + type(self)._tpc['borderCRP')
+        type(self)._cathode['widthCathode'] =2*(type(self)._tpc['widthCRM'] + type(self)._tpc['borderCRP'])
         type(self)._cathode['lengthCathode']=2*(type(self)._tpc['lengthCRM'] + type(self)._tpc['borderCRP'])
 
         type(self)._arapuca['list_posy_bot'] = [0]*4
@@ -295,6 +309,7 @@ class Params:
         type(self)._params.update(type(self)._fieldcage)
         type(self)._params.update(type(self)._cathode)
         type(self)._params.update(type(self)._arapuca)
+        type(self)._hasDerived = True
 
     def get(self, key):
         if key not in type(self)._params:

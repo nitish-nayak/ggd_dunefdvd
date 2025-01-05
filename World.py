@@ -3,9 +3,9 @@
 World builder for DUNE FD-VD
 
                                   |--> FieldCage
-World -> DetEnclosure -> Cryostat |--> TPC -> Various Subcomponents (Planes, Wires, CRMs)
-                                  |--> Arapucas
-                                  |--> Cathode
+World -> DetEnclosure -> Cryostat |--> TPC -> Wires
+                                  |--> Arapuca
+                                  |--> CathodeGrid
 '''
 
 import gegede.builder
@@ -22,7 +22,6 @@ class WorldBuilder(gegede.builder.Builder):
 
     def construct(self, geom):
         # get all the relevant stuff here
-        globals.SetDerived()
         construct_materials(geom)
         construct_definitions(geom)
 

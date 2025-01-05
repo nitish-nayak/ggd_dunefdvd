@@ -16,6 +16,8 @@ class ArapucaBuilder(gegede.builder.Builder):
         globals.Arapuca = kwds
 
     def construct(self, geom):
+        # for leaf builders, get the rest of the derived global parameters
+        globals.SetDerived()
         # define all the shapes
         a_out = (globals.get("ArapucaOut_x"), globals.get("ArapucaOut_y"), globals.get("ArapucaOut_z"))
         a_acc = (globals.get("ArapucaAcceptanceWindow_x"),
