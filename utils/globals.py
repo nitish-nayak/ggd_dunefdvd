@@ -28,8 +28,9 @@ class Params:
     _tpc['widthPCBActive'] = Q('167.7006cm')
     _tpc['borderCRM'] = Q('0.0cm')
     _tpc['borderCRP'] = Q('0.5cm')
-    _tpc['nCRM_x'] = 4*2
+    _tpc['nCRM_y'] = 4*2
     _tpc['nCRM_z'] = 20*2
+    _tpc['nCRM_x'] = 2
     _tpc['driftTPCActive'] = Q('650.0cm')
     _tpc['padWidth'] = Q('0.02cm')
 
@@ -163,34 +164,56 @@ class Params:
         type(self)._tpc['lengthCRM'] = type(self)._tpc['lengthPCBActive'] + 2 * type(self)._tpc['borderCRM']
 
         if type(self)._world['workspace'] == 1:
-            type(self)._tpc['nCRM_x'] = 1 * 2
+            type(self)._tpc['nCRM_y'] = 1 * 2
             type(self)._tpc['nCRM_z'] = 1 * 2
+            type(self)._tpc['nCRM_x'] = 1
         if type(self)._world['workspace'] == 2:
-            type(self)._tpc['nCRM_x'] = 2 * 2
+            type(self)._tpc['nCRM_y'] = 2 * 2
             type(self)._tpc['nCRM_z'] = 2 * 2
+            type(self)._tpc['nCRM_x'] = 1
         if type(self)._world['workspace'] == 3:
-            type(self)._tpc['nCRM_x'] = 4 * 2
+            type(self)._tpc['nCRM_y'] = 4 * 2
             type(self)._tpc['nCRM_z'] = 3 * 2
+            type(self)._tpc['nCRM_x'] = 1
+        # 1x8x6
         if type(self)._world['workspace'] == 4:
-            type(self)._tpc['nCRM_x'] = 4 * 2
+            type(self)._tpc['nCRM_y'] = 4 * 2
             type(self)._tpc['nCRM_z'] = 7 * 2
+            type(self)._tpc['nCRM_x'] = 1
+        # 1x8x14
         if type(self)._world['workspace'] == 5:
-            type(self)._tpc['nCRM_x'] = 4 * 2
+            type(self)._tpc['nCRM_y'] = 4 * 2
             type(self)._tpc['nCRM_z'] = 20 * 2
+            type(self)._tpc['nCRM_x'] = 1
+        # 2x8x6
+        if type(self)._world['workspace'] == 6:
+            type(self)._tpc['nCRM_y'] = 4 * 2
+            type(self)._tpc['nCRM_z'] = 3 * 2
+            type(self)._tpc['nCRM_x'] = 2
+        # 2x8x14
+        if type(self)._world['workspace'] == 7:
+            type(self)._tpc['nCRM_y'] = 4 * 2
+            type(self)._tpc['nCRM_z'] = 7 * 2
+            type(self)._tpc['nCRM_x'] = 2
 
-        type(self)._tpc['widthTPCActive'] = type(self)._tpc['nCRM_x'] * (type(self)._tpc['widthCRM'] + type(self)._tpc['borderCRP'])
+        type(self)._tpc['widthTPCActive'] = type(self)._tpc['nCRM_y'] * (type(self)._tpc['widthCRM'] + type(self)._tpc['borderCRP'])
         type(self)._tpc['lengthTPCActive'] = type(self)._tpc['nCRM_z'] * (type(self)._tpc['lengthCRM'] + type(self)._tpc['borderCRP'])
         type(self)._tpc['ReadoutPlane'] = type(self)._tpc['nViews'] * type(self)._tpc['padWidth']
         type(self)._tpc['anodePlateWidth'] = type(self)._tpc['padWidth']/2.
 
         if type(self)._world['workspace'] != 0:
-            type(self)._cryostat['Argon_x'] = type(self)._tpc['driftTPCActive'] + type(self)._cryostat['HeightGaseousAr'] +                     \
-                                              type(self)._tpc['ReadoutPlane'] + Q('100cm')
+            if type(self)._tpc['nCRM_x']== 1:
+                type(self)._cryostat['Argon_x'] = type(self)._tpc['driftTPCActive'] + type(self)._cryostat['HeightGaseousAr'] +                     \
+                                                  type(self)._tpc['ReadoutPlane'] + Q('100cm')
             type(self)._cryostat['Argon_y'] = type(self)._tpc['widthTPCActive'] + Q('162cm')
             type(self)._cryostat['Argon_z'] = type(self)._tpc['lengthTPCActive'] + Q('214.0cm')
 
-        type(self)._cryostat['xLArBuffer'] = type(self)._cryostat['Argon_x'] - type(self)._tpc['driftTPCActive'] -                              \
-                                             type(self)._cryostat['HeightGaseousAr'] - type(self)._tpc['ReadoutPlane']
+        if type(self)._tpc['nCRM_x'] == 1:
+            type(self)._cryostat['xLArBuffer'] = type(self)._cryostat['Argon_x'] - type(self)._tpc['driftTPCActive'] -                              \
+                                                 type(self)._cryostat['HeightGaseousAr'] - type(self)._tpc['ReadoutPlane'] - type(self)._cathode['heightCathode']
+        else:
+            type(self)._cryostat['xLArBuffer'] = type(self)._cryostat['Argon_x'] - 2*type(self)._tpc['driftTPCActive'] -                              \
+                                                 type(self)._cryostat['HeightGaseousAr'] - 2*type(self)._tpc['ReadoutPlane'] - type(self)._cathode('heightCathode')
         type(self)._cryostat['yLArBuffer'] = 0.5 * (type(self)._cryostat['Argon_y'] - type(self)._tpc['widthTPCActive'])
         type(self)._cryostat['zLArBuffer'] = 0.5 * (type(self)._cryostat['Argon_z'] - type(self)._tpc['lengthTPCActive'])
         type(self)._cryostat['Cryostat_x'] = type(self)._cryostat['Argon_x'] + 2*type(self)._cryostat['SteelThickness']
@@ -216,7 +239,14 @@ class Params:
                                                     type(self)._cryostat['Cryostat_x']/2
         type(self)._detenc['OriginXSet'] =  type(self)._detenc['DetEncX']/2.0 - type(self)._detenc['SteelSupport_x'] -                          \
                                             type(self)._detenc['FoamPadding'] - type(self)._cryostat['SteelThickness'] -                        \
-                                            type(self)._cryostat['xLArBuffer'] - type(self)._tpc['driftTPCActive']/2.0
+                                            type(self)._cryostat['xLArBuffer'] - type(self)._tpc['driftTPCActive']/2.0 -                        \
+                                            type(self)._cathode['heightCathode']
+        if type(self)._tpc['nCRM_x'] == 2:
+            type(self)._detenc['OriginXSet'] =  type(self)._detenc['DetEncX']/2.0 - type(self)._detenc['SteelSupport_x'] -                      \
+                                                type(self)._detenc['FoamPadding'] - type(self)._cryostat['SteelThickness'] -                    \
+                                                type(self)._cryostat['xLArBuffer'] - type(self)._tpc['driftTPCActive']/2.0 -                    \
+                                                type(self)._cathode['heightCathode']/2.
+
         type(self)._detenc['OriginYSet'] =  type(self)._detenc['DetEncY']/2.0 - type(self)._detenc['SpaceSteelSupportToWall'] -                 \
                                             type(self)._detenc['SteelSupport_y'] - type(self)._detenc['FoamPadding'] -                          \
                                             type(self)._cryostat['SteelThickness'] - type(self)._cryostat['yLArBuffer'] -                       \
@@ -241,21 +271,21 @@ class Params:
         type(self)._fieldcage['FieldCageSizeZ'] = type(self)._fieldcage['FieldShaperLength']+Q('2cm')
 
 
-        type(self)._cathode['widthCathode'] =2*type(self)._tpc['widthCRM']
-        type(self)._cathode['lengthCathode']=2*type(self)._tpc['lengthCRM']
+        type(self)._cathode['widthCathode'] =2*(type(self)._tpc['widthCRM'] + type(self)._tpc['borderCRP')
+        type(self)._cathode['lengthCathode']=2*(type(self)._tpc['lengthCRM'] + type(self)._tpc['borderCRP'])
 
-        type(self)._arapuca['list_posx_bot'] = [0]*4
+        type(self)._arapuca['list_posy_bot'] = [0]*4
         type(self)._arapuca['list_posz_bot'] = [0]*4
-        type(self)._arapuca['list_posx_bot'][0]= -2.0*type(self)._cathode['widthCathodeVoid'] -                                                 \
+        type(self)._arapuca['list_posy_bot'][0]= -2.0*type(self)._cathode['widthCathodeVoid'] -                                                 \
                                                  2.0*type(self)._cathode['CathodeBorder'] +                                                     \
                                                  type(self)._arapuca['GapPD'] + 0.5*type(self)._arapuca['ArapucaOut_x']
-        type(self)._arapuca['list_posz_bot'][0]= 0.5*type(self)._cathode['lengthCathodeVoid'] + type(self)._cathode['CathodeBorder']
-        type(self)._arapuca['list_posx_bot'][1]= -type(self)._cathode['CathodeBorder'] - type(self)._arapuca['GapPD'] -                         \
+        type(self)._arapuca['list_posz_bot'][0]= -(0.5*type(self)._cathode['lengthCathodeVoid'] + type(self)._cathode['CathodeBorder'])
+        type(self)._arapuca['list_posy_bot'][1]= type(self)._cathode['CathodeBorder'] + type(self)._arapuca['GapPD'] +                          \
                                                  0.5*type(self)._arapuca['ArapucaOut_x']
         type(self)._arapuca['list_posz_bot'][1]=-1.5*type(self)._cathode['lengthCathodeVoid'] - 2.0*type(self)._cathode['CathodeBorder']
-        type(self)._arapuca['list_posx_bot'][2]=-type(self)._arapuca['list_posx_bot'][1]
+        type(self)._arapuca['list_posy_bot'][2]=-type(self)._arapuca['list_posy_bot'][1]
         type(self)._arapuca['list_posz_bot'][2]=-type(self)._arapuca['list_posz_bot'][1]
-        type(self)._arapuca['list_posx_bot'][3]=-type(self)._arapuca['list_posx_bot'][0]
+        type(self)._arapuca['list_posy_bot'][3]=-type(self)._arapuca['list_posy_bot'][0]
         type(self)._arapuca['list_posz_bot'][3]=-type(self)._arapuca['list_posz_bot'][0]
 
         # add it to global list
