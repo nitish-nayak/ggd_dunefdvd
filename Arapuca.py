@@ -22,18 +22,14 @@ class ArapucaBuilder(gegede.builder.Builder):
                  globals.get("ArapucaAcceptanceWindow_y"),
                  globals.get("ArapucaAcceptanceWindow_z"))
 
+        arapucaEnclosureBox = geom.shapes.Box('ArapucaEnclosure',
+                                              dx = a_out[0],
+                                              dy = a_out[1],
+                                              dz = a_out[2])
         arapucaOutBox = geom.shapes.Box('ArapucaOut',
-                                        dx = a_out[0],
-                                        dy = a_out[1],
-                                        dz = a_out[2])
-        arapucaOutShortLatBox = geom.shapes.Box('ArapucaOutShortLat',
-                                                dx = a_out[0],
-                                                dy = a_out[2],
-                                                dz = a_out[1])
-        arapucaOutCathodeBox = geom.shapes.Box('ArapucaOutCathode',
-                                               dx = a_out[1],
-                                               dy = a_out[2],
-                                               dz = a_out[0])
+                                        dx = a_out[0] - Q('0.05cm'),
+                                        dy = a_out[1] - Q('0.05cm'),
+                                        dz = a_out[2] - Q('0.05cm'))
         arapucaInBox = geom.shapes.Box('ArapucaIn',
                                        dx = globals.get("ArapucaIn_x"),
                                        dy = a_out[1],
@@ -52,14 +48,6 @@ class ArapucaBuilder(gegede.builder.Builder):
                                         dx = a_acc[0],
                                         dy = a_acc[1],
                                         dz = a_acc[2])
-        arapucaAccShortLatBox = geom.shapes.Box('ArapucaAcceptanceWindowShortLat',
-                                                dx = a_acc[0],
-                                                dy = a_acc[2],
-                                                dz = a_acc[1])
-        arapucaAccCathodeBox = geom.shapes.Box('ArapucaAcceptanceWindowCathode',
-                                               dx = a_acc[1],
-                                               dy = a_acc[2],
-                                               dz = a_acc[0])
         arapucaDoubleInBox = geom.shapes.Box('ArapucaDoubleIn',
                                              dx = globals.get("ArapucaIn_x"),
                                              dy = a_out[1] + Q('1.0cm'),
@@ -74,74 +62,55 @@ class ArapucaBuilder(gegede.builder.Builder):
                                                                                   z = Q('0cm'))
                                                     )
         arapucaDoubleAccBox = geom.shapes.Box('ArapucaDoubleAcceptanceWindow',
-                                              dx = a_out[1] - Q('0.02cm'),
-                                              dy = a_acc[0],
+                                              dx = a_acc[0],
+                                              dy = a_out[1] - Q('0.02cm'),
                                               dz = a_acc[2])
-        arapucaCathodeAccBox = geom.shapes.Box('ArapucaCathodeAcceptanceWindow',
-                                               dx = a_acc[1],
-                                               dy = a_acc[0],
-                                               dz = a_acc[2])
 
         # define all the sub-volumes
         opdetsens_LV = geom.structure.Volume('volOpDetSensitive',
                                              material = "LAr",
                                              shape = arapucaAccBox)
-        opdetsenslonglat_LV = geom.structure.Volume('volOpDetSensitiveLongLat',
-                                                    material = "LAr",
-                                                    shape = arapucaAccBox)
-        opdetsenssholat_LV = geom.structure.Volume('volOpDetSensitiveShortLat',
-                                                   material = "LAr",
-                                                   shape = arapucaAccShortLatBox)
-        opdetsenscathode_LV = geom.structure.Volume('volOpDetSensitiveCathode',
-                                                    material = "LAr",
-                                                    shape = arapucaAccCathodeBox)
-        main_arapuca_LV = geom.structure.Volume('Arapuca',
+        arapuca_LV = geom.structure.Volume('Arapuca',
                                            material = "G10",
                                            shape = arapucaWallsBox)
         # define the larger volumes
-        arapucaout_LV = geom.structure.Volume('volArapuca',
+        arapucaenc_LV = geom.structure.Volume('volArapuca',
                                               material = "LAr",
-                                              shape = arapucaOutBox)
-        arapucalonglat_LV = geom.structure.Volume('volArapucaLongLat',
-                                                  material = "LAr",
-                                                  shape = arapucaOutBox)
-        arapucasholat_LV = geom.structure.Volume('volArapucaShortLat',
-                                                 material = "LAr",
-                                                 shape = arapucaOutShortLatBox)
-        arapucacathode_LV = geom.structure.Volume('volArapucaCathode',
-                                                  material = "LAr",
-                                                  shape = arapucaOutCathodeBox)
+                                              shape = arapucaEnclosureBox)
         # add it to the builder
-        self.add_volume(arapucaout_LV, arapucalonglat_LV, arapucasholat_LV, arapucacathode_LV)
+        self.add_volume(arapucaenc_LV)
 
         # now do the placements for each
-        arapucaout_LV     = self.placeArapuca(arapucaout_LV, main_arapuca_LV, opdetsens_LV,
+        arapucaenc_LV     = self.placeArapuca(arapucaenc_LV, arapuca_LV, opdetsens_LV,
                                               opdet_pos = geom.structure.Position('opdetshift',
                                                                                   x = Q('0cm'),
                                                                                   y = 0.5*a_acc[1],
                                                                                   z = Q('0cm')))
-        arapucalonglat_LV = self.placeArapuca(arapucalonglat_LV, main_arapuca_LV, opdetsenslonglat_LV,
-                                              opdet_pos = geom.structure.Position('opdetshift',
-                                                                                  x = Q('0cm'),
-                                                                                  y = 0.5*a_acc[1],
-                                                                                  z = Q('0cm')))
-        arapucasholat_LV  = self.placeArapuca(arapucasholat_LV, main_arapuca_LV, opdetsenssholat_LV,
-                                              opdet_pos = geom.structure.Position('opdetshift',
-                                                                                  x = Q('0cm'),
-                                                                                  y = Q('0cm'),
-                                                                                  z = 0.5*a_acc[1]),
-                                              rotArapuca = "rMinus90AboutX")
-        arapucacathode_LV = self.placeArapuca(arapucacathode_LV, main_arapuca_LV, opdetsenscathode_LV,
-                                              opdet_pos = geom.structure.Position('opdetshift',
-                                                                                  x = 0.5*a_acc[1],
-                                                                                  y = Q('0cm'),
-                                                                                  z = Q('0cm')),
-                                              rotArapuca = "rPlus90AboutXPlus90AboutZ")
+        # Deal with double-sided cathode arapucas, for the case of 2 drift volumes
+        if globals.get("nCRM_x") == 2:
+            # define all the sub-volumes
+            opdetsens2_LV = geom.structure.Volume('volOpDetSensitiveDouble',
+                                                 material = "LAr",
+                                                 shape = arapucaDoubleAccBox)
+            arapuca2_LV = geom.structure.Volume('ArapucaDouble',
+                                                material = "G10",
+                                                shape = arapucaDoubleWallsBox)
+            # define the larger volumes
+            arapucaenc2_LV = geom.structure.Volume('volArapucaDouble',
+                                                   material = "LAr",
+                                                   shape = arapucaEnclosureBox)
+            # add it to the builder
+            self.add_volume(arapucaenc2_LV)
+
+            # now do the placements for each
+            arapucaenc2_LV     = self.placeArapuca(arapucaenc2_LV, arapuca2_LV, opdetsens2_LV,
+                                                   opdet_pos="posCenter")
+        return
 
     # helper for arapuca placements
-    def placeArapuca(self, arapuca_LV, main_arapuca_LV, opdet_LV, opdet_pos, rotArapuca="rIdentity"):
+    def placeArapuca(self, arapuca_LV, arapuca_LV, opdet_LV, opdet_pos, rotArapuca="rIdentity"):
         place1 = geom.structure.Placement('placearapuca_in'+arapuca_LV.name,
-                                          volume = main_arapuca_LV,
+                                          volume = arapuca_LV,
                                           pos = "posCenter",
                                           rot = rotArapuca
                                           )
