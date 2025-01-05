@@ -58,7 +58,7 @@ class DetEnclosureBuilder(gegede.builder.Builder):
                                               pos = "posCenter")
 
         foampaddingLV = geom.structure.Volume('vol'+foampaddingBox.name,
-                                              material = "foam_protoDUNE_RPUF_assayedSample",
+                                              material = "fibrous_glass",
                                               shape = foampaddingBox)
         steelsupportLV = geom.structure.Volume('vol'+steelsupportBox.name,
                                               material = "AirSteelMixture",

@@ -17,7 +17,7 @@ class FieldCageBuilder(gegede.builder.Builder):
 
     def constructShortTubeSlim(self, geom):
         fsshorttubeL = globals.get("FieldShaperShortTubeLength")
-        if globals.get("nCRM_x") != 8:
+        if globals.get("nCRM_y") != 8:
             fieldshapershortTubeSlim = geom.shapes.Tubs("FieldShaperShorttubeSlim",
                                                         rmin = globals.get("FieldShaperInnerRadius"),
                                                         rmax = globals.get("FieldShaperOuterRadiusSlim"),
