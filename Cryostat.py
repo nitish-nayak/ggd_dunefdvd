@@ -19,7 +19,7 @@ class CryostatBuilder(gegede.builder.Builder):
     # a number of placement helpers for cryostat and other constituent volumes
     def placeCathodeAndAnode(self, geom, c_LV, a_LV, tpcenc_LV):
         if not globals.get("Cathode_switch"):
-            return
+            return tpcenc_LV
 
         cathode_x = 0.5*globals.get("TPCEnclosure_x") - globals.get("TPC_x") -                                      \
                     globals.get("anodePlateWidth") - 0.5*globals.get("heightCathode")
@@ -64,12 +64,13 @@ class CryostatBuilder(gegede.builder.Builder):
                 cathode_y += globals.get("widthCathode")
             cathode_z += globals.get("lengthCathode")
             cathode_y = -0.5*globals.get("TPCEnclosure_y") + 0.5*globals.get("widthCathode")
-        return
+        return tpcenc_LV
 
     # upstream logic needed for arapuca vs arapurca double passed as argument
     def placeOpDetsCathode(self, geom, arapuca_LV, tpcenc_LV):
         if globals.get("pdsconfig"):
-            return
+            return tpcenc_LV
+
         frCenter_x = 0.5*globals.get("TPCEnclosure_x") - globals.get("TPC_x") -                                     \
                      globals.get("anodePlateWidth") - 0.5*globals.get("heightCathode")
         frCenter_y = -0.5*globals.get("TPCEnclosure_y") + 0.5*globals.get("widthCathode")
@@ -106,11 +107,12 @@ class CryostatBuilder(gegede.builder.Builder):
                 frCenter_z += globals.get("lengthCathode")
             frCenter_y += globals.get("widthCathode")
             frCenter_z = -0.5*globals.get("TPCEnclosure_z") + 0.5*globals.get("lengthCathode")
-        return
+        return tpcenc_LV
 
     def placeFieldShaper(self, geom, fs_LV, fsslim_LV, cryo_LV):
         if not globals.get("FieldCage_switch"):
-            return
+            return cryo_LV
+
         reversed = 0 if globals.get("nCRM_x") != 2 else 1
         pos_y = -0.5*globals.get("FieldShaperShortTubeLength") - globals.get("FieldShaperTorRad")
         pos_z = Q('0cm')
@@ -147,11 +149,12 @@ class CryostatBuilder(gegede.builder.Builder):
                                                                                     z = pos_z),
                                                       rot = "rPlus90AboutZ")
                 cryo_LV.placements.append(place_slim.name)
-        return
+        return cryo_LV
 
     def placeOpDetsLateral(self, geom, arapuca_LV, cryo_LV):
         if (globals.get("pdsconfig") != 0 or globals.get("nCRM_y") != 8):
-            return
+            return cryo_LV
+
         frCenter_x = 0.5*globals.get("Argon_x") - globals.get("HeightGaseousAr") -                                  \
                      0.5*globals.get("padWidth")
         frCenter_z = -19*0.5*globals.get("lengthCathode") +                                                         \
@@ -189,11 +192,12 @@ class CryostatBuilder(gegede.builder.Builder):
                                                      rot = rotation)
                 cryo_LV.placements.append(place_lat.name)
             frCenter_z += globals.get("lengthCathode")
-        return
+        return cryo_LV
 
     def placeOpDetsShortLateral(self, geom, arapuca_LV, cryo_LV):
         if (globals.get("pdsconfig") != 0 or globals.get("nCRM_y") != 8):
-            return
+            return cryo_LV
+
         frCenter_x = 0.5*globals.get("Argon_x") - globals.get("HeightGaseousAr") -                                  \
                      0.5*globals.get("padWidth")
         frCenter_z = -19*0.5*globals.get("lengthCathode") +                                                         \
@@ -231,11 +235,11 @@ class CryostatBuilder(gegede.builder.Builder):
                                                                                    z = ara_z),
                                                      rot = rotation)
                 cryo_LV.placements.append(place_lat.name)
-        return
+        return cryo_LV
 
     def placeOpDetsMembOnly(self, geom, arapuca_LV, cryo_LV):
         if (globals.get("pdsconfig") != 1 or globals.get("nCRM_y") != 8):
-            return
+            return cryo_LV
 
         frCenter_x = 0.5*globals.get("TPC_x") - 0.5*globals.get("padWidth")
         frCenter_z = -19*0.5*globals.get("lengthCathode") +                                                         \
@@ -271,5 +275,5 @@ class CryostatBuilder(gegede.builder.Builder):
                                                      rot = rotation)
                 cryo_LV.placements.append(place_lat.name)
             frCenter_z += globals.get("lengthCathode")
-        return
+        return cryo_LV
 
