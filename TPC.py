@@ -95,7 +95,7 @@ class TPCBuilder(gegede.builder.Builder):
                                                                                y = postpcs[plane][1],
                                                                                z = postpcs[plane][2]),
                                                  rot = "rIdentity")
-            tpc_LV.placements.append(tpc_place)
+            tpc_LV.placements.append(tpc_place.name)
         # place the active block
         tpcactive_place = geom.structure.Placement('place%sActive'%self.name,
                                                    volume = tpcactive_LV,
@@ -104,7 +104,7 @@ class TPCBuilder(gegede.builder.Builder):
                                                                                  y = tpcactive_pos[1],
                                                                                  z = tpcactive_pos[2]),
                                                    rot = "rIdentity")
-        tpc_LV.placements.append(tpcactive_place)
+        tpc_LV.placements.append(tpcactive_place.name)
         return
 
 
