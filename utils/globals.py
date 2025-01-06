@@ -208,7 +208,7 @@ class Params:
         type(self)._tpc['TPCActive_x'] = type(self)._tpc['driftTPCActive']
         type(self)._tpc['TPCActive_y'] = type(self)._tpc['widthCRM_active']
         type(self)._tpc['TPCActive_z'] = type(self)._tpc['lengthCRM_active']
-        type(self)._tpc['TPC_x'] = type(self)._tpc['driftTPCActive'] + type(self)._tpc['ReadoutPlane']
+        type(self)._tpc['TPC_x'] = type(self)._tpc['TPCActive_x'] + type(self)._tpc['ReadoutPlane']
         type(self)._tpc['TPC_y'] = type(self)._tpc['widthCRM']
         type(self)._tpc['TPC_z'] = type(self)._tpc['lengthCRM']
 
