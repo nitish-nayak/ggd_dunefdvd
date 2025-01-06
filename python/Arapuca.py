@@ -16,6 +16,8 @@ class ArapucaBuilder(gegede.builder.Builder):
         globals.Arapuca = kwds
 
     def construct(self, geom):
+        # for leaf builders, get the rest of the derived global parameters
+        globals.SetDerived()
         # define all the shapes
         a_out = (globals.get("ArapucaOut_x"), globals.get("ArapucaOut_y"), globals.get("ArapucaOut_z"))
         a_acc = (globals.get("ArapucaAcceptanceWindow_x"),
@@ -108,16 +110,16 @@ class ArapucaBuilder(gegede.builder.Builder):
         return
 
     # helper for arapuca placements
-    def placeArapuca(self, arapuca_LV, arapuca_LV, opdet_LV, opdet_pos, rotArapuca="rIdentity"):
-        place1 = geom.structure.Placement('placearapuca_in'+arapuca_LV.name,
+    def placeArapuca(self, arapucaenc_LV, arapuca_LV, opdet_LV, opdet_pos, rotArapuca="rIdentity"):
+        place1 = geom.structure.Placement('placearapuca_in'+arapucaenc_LV.name,
                                           volume = arapuca_LV,
                                           pos = "posCenter",
                                           rot = rotArapuca
                                           )
-        place2 = geom.structure.Placement('placeopdet_in'+arapuca_LV.name,
+        place2 = geom.structure.Placement('placeopdet_in'+arapucaenc_LV.name,
                                           volume = opdet_LV,
                                           pos = opdet_pos,
                                           )
-        arapuca_LV.placements.append(place1.name)
-        arapuca_LV.placements.append(place2.name)
-        return
+        arapucaenc_LV.placements.append(place1.name)
+        arapucaenc_LV.placements.append(place2.name)
+        return arapucaenc_LV

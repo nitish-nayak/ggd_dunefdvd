@@ -16,6 +16,9 @@ class FieldCageBuilder(gegede.builder.Builder):
         globals.FieldCage = kwds
 
     def constructShortTubeSlim(self, geom):
+        # for leaf builders, get the rest of the derived global parameters
+        globals.SetDerived()
+        # construction begins
         fsshorttubeL = globals.get("FieldShaperShortTubeLength")
         if globals.get("nCRM_y") != 8:
             fieldshapershortTubeSlim = geom.shapes.Tubs("FieldShaperShorttubeSlim",

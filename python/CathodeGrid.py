@@ -37,6 +37,9 @@ class CathodeGridBuilder(gegede.builder.Builder):
             cij = constructGrid(geom, cij, cvoid, ny, nz-1)
 
     def construct(self, geom):
+        # for leaf builders, get the rest of the derived global parameters
+        globals.SetDerived()
+        # construction begins
         cathodeblockBox = geom.shapes.Box('CathodeBlock',
                                           dx=globals.get("heightCathode"),
                                           dy=globals.get("widthCathode"),
