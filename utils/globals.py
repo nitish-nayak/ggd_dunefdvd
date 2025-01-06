@@ -161,6 +161,8 @@ class Params:
         # accessible only once construction begins
         if type(self)._hasDerived:
             return
+
+        # TPC parameters
         type(self)._tpc['nViews'] = len(type(self)._tpc['nChans'])
         type(self)._tpc['lengthPCBActive'] = type(self)._tpc['wirePitchZ'] * type(self)._tpc['nChans']['Col']
         type(self)._tpc['widthCRM_active'] = type(self)._tpc['widthPCBActive']
@@ -212,6 +214,7 @@ class Params:
         type(self)._tpc['TPC_y'] = type(self)._tpc['widthCRM']
         type(self)._tpc['TPC_z'] = type(self)._tpc['lengthCRM']
 
+        # Cryostat parameters
         if type(self)._world['workspace'] != 0:
             if type(self)._tpc['nCRM_x']== 1:
                 type(self)._cryostat['Argon_x'] = type(self)._tpc['driftTPCActive'] + type(self)._cryostat['HeightGaseousAr'] +                 \
@@ -232,7 +235,15 @@ class Params:
         type(self)._cryostat['Cryostat_x'] = type(self)._cryostat['Argon_x'] + 2*type(self)._cryostat['SteelThickness']
         type(self)._cryostat['Cryostat_y'] = type(self)._cryostat['Argon_y'] + 2*type(self)._cryostat['SteelThickness']
         type(self)._cryostat['Cryostat_z'] = type(self)._cryostat['Argon_z'] + 2*type(self)._cryostat['SteelThickness']
+        type(self)._cryostat['TPCEnclosure_x'] = type(self)._cryostat['Argon_x'] -                                                              \
+                                                 type(self)._cryostat['HeightGaseousAr'] +                                                      \
+                                                 type(self)._tpc['nCRM_x']*type(self)._tpc['anodePlateWidth'] -                                 \
+                                                 type(self)._cryostat['xLArBuffer']
+        type(self)._cryostat['TPCEnclosure_y'] = type(self)._tpc['nCRM_y']*(type(self)._tpc['widthCRM'] + type(self)._tpc['borderCRP'])
+        type(self)._cryostat['TPCEnclosure_z'] = type(self)._tpc['nCRM_z']*(type(self)._tpc['lengthCRM'] + type(self)._tpc['borderCRP'])
 
+
+        # Enclosure parameters
         type(self)._detenc['FracMassOfAir'] = 1 - type(self)._detenc['FracMassOfSteel']
         type(self)._detenc['DetEncX']  =    type(self)._cryostat['Cryostat_x'] +                                                                \
                                             2*(type(self)._detenc['SteelSupport_x'] +                                                           \
@@ -246,10 +257,12 @@ class Params:
                                             2*(type(self)._detenc['SteelSupport_z'] +                                                           \
                                             type(self)._detenc['FoamPadding']) +                                                                \
                                             2*type(self)._detenc['SpaceSteelSupportToWall']
+
         type(self)._detenc['posCryoInDetEnc_x'] = - type(self)._detenc['DetEncX']/2 +                                                           \
                                                     type(self)._detenc['SteelSupport_x'] +                                                      \
                                                     type(self)._detenc['FoamPadding'] +                                                         \
                                                     type(self)._cryostat['Cryostat_x']/2
+
         type(self)._detenc['OriginXSet'] =  type(self)._detenc['DetEncX']/2.0 - type(self)._detenc['SteelSupport_x'] -                          \
                                             type(self)._detenc['FoamPadding'] - type(self)._cryostat['SteelThickness'] -                        \
                                             type(self)._cryostat['xLArBuffer'] - type(self)._tpc['driftTPCActive']/2.0 -                        \
@@ -270,6 +283,7 @@ class Params:
                                             type(self)._tpc['borderCRM']
 
 
+        # FieldCage parameters
         type(self)._fieldcage['FieldShaperLongTubeLength']  =  type(self)._tpc['lengthTPCActive']
         type(self)._fieldcage['FieldShaperShortTubeLength'] =  type(self)._tpc['widthTPCActive']
         type(self)._fieldcage['FieldShaperLength'] = type(self)._fieldcage['FieldShaperLongTubeLength'] +                                       \
@@ -285,9 +299,11 @@ class Params:
         type(self)._fieldcage['FieldCageSizeZ'] = type(self)._fieldcage['FieldShaperLength'] + Q('2cm')
 
 
+        # Cathode parameters
         type(self)._cathode['widthCathode'] =2*(type(self)._tpc['widthCRM'] + type(self)._tpc['borderCRP'])
         type(self)._cathode['lengthCathode']=2*(type(self)._tpc['lengthCRM'] + type(self)._tpc['borderCRP'])
 
+        # Arapuca parameters
         type(self)._arapuca['list_posy_bot'] = [0]*4
         type(self)._arapuca['list_posz_bot'] = [0]*4
         type(self)._arapuca['list_posy_bot'][0]= -2.0*type(self)._cathode['widthCathodeVoid'] -                                                 \
