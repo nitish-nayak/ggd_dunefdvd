@@ -77,6 +77,7 @@ class WiresBuilder(gegede.builder.Builder):
             length = globals.get("TPCActive_z").magnitude
             width = 0.
             nch = nchs['Ind1'] if plane == 'U' else nchs['Ind2']
+            nchb = nchs['Ind1Bot']
             # Wire and pitch direction unit vectors
             dirw = [cos(theta), sin(theta)]
             dirp = [cos(theta - pi/2), sin(theta - pi/2)]
@@ -85,8 +86,12 @@ class WiresBuilder(gegede.builder.Builder):
             alpha = theta if theta <= pi/2 else pi - theta
 
             # Calculate wire spacing
-            # dX = pitch / sin(alpha)
-            # dY = pitch / sin(pi/2 - alpha)
+            dX = pitch / sin(alpha)
+            dY = pitch / sin(pi/2 - alpha)
+            if length <= 0:
+                length = dX * nchb
+            if width <= 0:
+                width = dY * (nch - nchb)
 
             # Starting point adjusted for direction
             orig = [0, 0]
@@ -161,7 +166,7 @@ class WiresBuilder(gegede.builder.Builder):
                 shape = geom.shapes.Tubs('CRMWireZ',
                                          rmin = Q('0cm'),
                                          rmax = 0.5*globals.get("padWidth"),
-                                         dz = z,
+                                         dz = 0.5*z,
                                          sphi = Q("0deg"),
                                          dphi = Q("360deg"))
                 vol = geom.structure.Volume('volTPCWire'+plane+str(winfo[0][0]),
@@ -174,7 +179,7 @@ class WiresBuilder(gegede.builder.Builder):
                     shape = geom.shapes.Tubs('CRMWire'+plane+str(wire[0]),
                                              rmin = Q('0cm'),
                                              rmax = 0.5*globals.get("padWidth"),
-                                             dz = z,
+                                             dz = 0.5*z,
                                              sphi = Q("0deg"),
                                              dphi = Q("360deg"))
                     vol = geom.structure.Volume('volTPCWire'+plane+str(wire[0]),
