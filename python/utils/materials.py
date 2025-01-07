@@ -27,7 +27,7 @@ def construct_materials(geom):
     m_vacuum = geom.matter.Mixture("Vacuum", density = "1.e-25g/cc",
 						components = (("videRef", 1.0),))
 
-    m_aluminum_al = geom.matter.Mixture("ALUMINUM_Al", density = "2.6990g/cc",
+    m_aluminum_al = geom.matter.Mixture("ALUMINIUM_Al", density = "2.6990g/cc",
 						components = (("aluminum", 1.0000),))
 
     m_silicon_si = geom.matter.Mixture("SILICON_Si", density = "2.3300g/cc",

@@ -22,14 +22,15 @@ class WorldBuilder(gegede.builder.Builder):
 
     def construct(self, geom):
         # get all the relevant stuff here
+        globals.SetDerived()
         construct_materials(geom)
         construct_definitions(geom)
 
         # create the world box
         worldBox = geom.shapes.Box(self.name,
-                                   dx=globals.get("DetEncX")+2*globals.get("RockThickness"),
-                                   dy=globals.get("DetEncY")+2*globals.get("RockThickness"),
-                                   dz=globals.get("DetEncZ")+2*globals.get("RockThickness"))
+                                   dx=0.5*globals.get("DetEncX")+globals.get("RockThickness"),
+                                   dy=0.5*globals.get("DetEncY")+globals.get("RockThickness"),
+                                   dz=0.5*globals.get("DetEncZ")+globals.get("RockThickness"))
 
         # put it in the world volume
         worldLV = geom.structure.Volume('vol'+self.name, material="DUSEL_Rock", shape=worldBox)

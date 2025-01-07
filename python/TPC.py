@@ -16,21 +16,23 @@ class TPCBuilder(gegede.builder.Builder):
         globals.TPC = kwds
 
     def construct(self, geom):
+        # for leaf builders, get the rest of the derived global parameters
+        globals.SetDerived()
         # define the CRM shapes
         crmBox = geom.shapes.Box('CRM',
-                                 dx = globals.get("TPC_x"),
-                                 dy = globals.get("TPC_y"),
-                                 dz = globals.get("TPC_z"))
+                                 dx = 0.5*globals.get("TPC_x"),
+                                 dy = 0.5*globals.get("TPC_y"),
+                                 dz = 0.5*globals.get("TPC_z"))
         crmactiveBox = geom.shapes.Box('CRMActive',
-                                       dx = globals.get("TPCActive_x"),
-                                       dy = globals.get("TPCActive_y"),
-                                       dz = globals.get("TPCActive_z"))
+                                       dx = 0.5*globals.get("TPCActive_x"),
+                                       dy = 0.5*globals.get("TPCActive_y"),
+                                       dz = 0.5*globals.get("TPCActive_z"))
         crmplaneBoxes = {}
         for plane in ['U', 'V', 'Z']:
             crmplaneBoxes[plane] = geom.shapes.Box('CRM'+plane+'plane',
-                                                   dx = globals.get("padWidth"),
-                                                   dy = globals.get("TPCActive_y"),
-                                                   dz = globals.get("TPCActive_z"))
+                                                   dx = 0.5*globals.get("padWidth"),
+                                                   dy = 0.5*globals.get("TPCActive_y"),
+                                                   dz = 0.5*globals.get("TPCActive_z"))
 
         # get the constituent logical volumes
         tpcactive_LV = geom.structure.Volume('vol'+self.name+'Active',
@@ -58,7 +60,7 @@ class TPCBuilder(gegede.builder.Builder):
             rotation = "rPlus90AboutX" if plane == 'Z' else "r%sWireAboutX" % plane
             if wires:
                 n = 0
-                for w in wireinfo:
+                for w in wireinfo[plane]:
                     if plane == 'Z' and (globals.get("TPCActive_z").magnitude < 2*abs(w[1])):
                         print("Cannot place wire %d in view Z, as plane is too small\n" % n)
                     pos = geom.structure.Position('posWire%s%d' % (plane, n),

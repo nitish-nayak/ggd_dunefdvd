@@ -16,10 +16,12 @@ class DetEnclosureBuilder(gegede.builder.Builder):
         globals.Enclosure = kwds
 
     def construct(self, geom):
+        # for leaf builders, get the rest of the derived global parameters
+        globals.SetDerived()
         detencBox = geom.shapes.Box(self.name,
-                                    dx=globals.get("DetEncX"),
-                                    dy=globals.get("DetEncY"),
-                                    dz=globals.get("DetEncZ"))
+                                    dx=0.5*globals.get("DetEncX"),
+                                    dy=0.5*globals.get("DetEncY"),
+                                    dz=0.5*globals.get("DetEncZ"))
         detencLV = geom.structure.Volume('vol'+self.name, material="Air", shape=detencBox)
         self.add_volume(detencLV)
 
@@ -33,24 +35,24 @@ class DetEnclosureBuilder(gegede.builder.Builder):
 
         # get the outer structure volumes
         foampadblockBox = geom.shapes.Box('FoamPadBlock',
-                                          dx=globals.get("Cryostat_x") + 2*globals.get("FoamPadding"),
-                                          dy=globals.get("Cryostat_y") + 2*globals.get("FoamPadding"),
-                                          dz=globals.get("Cryostat_z") + 2*globals.get("FoamPadding"))
+                                          dx=0.5*globals.get("Cryostat_x") + globals.get("FoamPadding"),
+                                          dy=0.5*globals.get("Cryostat_y") + globals.get("FoamPadding"),
+                                          dz=0.5*globals.get("Cryostat_z") + globals.get("FoamPadding"))
         foampaddingBox = geom.shapes.Boolean('FoamPadding',
                                              type = 'subtraction',
                                              first = foampadblockBox,
                                              second = geom.get_shape(cryostatLV),
                                              pos = "posCenter")
         steelsupportblockBox = geom.shapes.Box('SteelSupportBlock',
-                                               dx=globals.get("Cryostat_x")    +    \
-                                                  2*globals.get("FoamPadding") +    \
-                                                  2*globals.get("SteelSupport_x"),
-                                               dy=globals.get("Cryostat_y")    +    \
-                                                  2*globals.get("FoamPadding") +    \
-                                                  2*globals.get("SteelSupport_y"),
-                                               dz=globals.get("Cryostat_z")    +    \
-                                                  2*globals.get("FoamPadding") +    \
-                                                  2*globals.get("SteelSupport_z"))
+                                               dx=0.5*globals.get("Cryostat_x") +   \
+                                                  globals.get("FoamPadding") +      \
+                                                  globals.get("SteelSupport_x"),
+                                               dy=0.5*globals.get("Cryostat_y") +   \
+                                                  globals.get("FoamPadding") +      \
+                                                  globals.get("SteelSupport_y"),
+                                               dz=0.5*globals.get("Cryostat_z") +   \
+                                                  globals.get("FoamPadding") +      \
+                                                  globals.get("SteelSupport_z"))
         steelsupportBox = geom.shapes.Boolean('SteelSupport',
                                               type = 'subtraction',
                                               first = steelsupportblockBox,

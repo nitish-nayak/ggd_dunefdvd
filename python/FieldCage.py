@@ -16,34 +16,31 @@ class FieldCageBuilder(gegede.builder.Builder):
         globals.FieldCage = kwds
 
     def constructShortTubeSlim(self, geom):
-        # for leaf builders, get the rest of the derived global parameters
-        globals.SetDerived()
         # construction begins
         fsshorttubeL = globals.get("FieldShaperShortTubeLength")
         if globals.get("nCRM_y") != 8:
             fieldshapershortTubeSlim = geom.shapes.Tubs("FieldShaperShorttubeSlim",
                                                         rmin = globals.get("FieldShaperInnerRadius"),
                                                         rmax = globals.get("FieldShaperOuterRadiusSlim"),
-                                                        dz   = fsshorttubeL,
+                                                        dz   = 0.5*fsshorttubeL,
                                                         sphi = Q("0deg"),
                                                         dphi = Q("360deg"))
             return fieldshapershortTubeSlim
         else:
 
-            fsarapucaWL = globals.get("FieldShaperArapucaWindowLength")
             fcarapucaWL = globals.get("FieldCageArapucaWindowLength")
 
 
             fieldshapershortTubeWindowSlim = geom.shapes.Tubs("FieldShaperShorttubeWindowSlim",
                                                               rmin = globals.get("FieldShaperInnerRadius"),
                                                               rmax = globals.get("FieldShaperOuterRadiusSlim"),
-                                                              dz   = fsarapucaWL,
+                                                              dz   = 0.5*fcarapucaWL,
                                                               sphi = Q("0deg"),
                                                               dphi = Q("360deg"))
             fieldshapershortTubeWindowNotSlim = geom.shapes.Tubs("FieldShaperShorttubeWindowNotSlim",
                                                                   rmin = globals.get("FieldShaperInnerRadius"),
                                                                   rmax = globals.get("FieldShaperOuterRadius"),
-                                                                  dz   = 0.5*(fsarapucaWL - fcarapucaWL),
+                                                                  dz   = 0.25*(fsshorttubeL - fcarapucaWL),
                                                                   sphi = Q("0deg"),
                                                                   dphi = Q("360deg"))
             fsunionWindow1 = geom.shapes.Boolean("FSunionWindow1",
@@ -53,42 +50,45 @@ class FieldCageBuilder(gegede.builder.Builder):
                                                  pos = geom.structure.Position("posFieldShaperShortTube_shift1",
                                                                                x = Q('0cm'),
                                                                                y = Q('0cm'),
-                                                                               z = 0.25*(fsarapucaWL+fsshorttubeL)))
-            fieldshapershortTubeSlim = geom.shapes.Boolean("FSunionWindow1",
-                                               type = "union",
-                                               first = fsunionWindow1,
-                                               second = fieldshapershortTubeWindowNotSlim,
-                                               pos = geom.structure.Position("posFieldShaperShortTube_shift2",
-                                                                             x = Q('0cm'),
-                                                                             y = Q('0cm'),
-                                                                             z = -0.25*(fsarapucaWL+fsshorttubeL)))
+                                                                               z = 0.25*(fcarapucaWL+fsshorttubeL)))
+            fieldshapershortTubeSlim = geom.shapes.Boolean("FieldShaperShorttubeSlim",
+                                                           type = "union",
+                                                           first = fsunionWindow1,
+                                                           second = fieldshapershortTubeWindowNotSlim,
+                                                           pos = geom.structure.Position("posFieldShaperShortTube_shift2",
+                                                                                         x = Q('0cm'),
+                                                                                         y = Q('0cm'),
+                                                                                         z = -0.25*(fcarapucaWL+fsshorttubeL)))
             return fieldshapershortTubeSlim
 
 
 
     def construct(self, geom):
+        # for leaf builders, get the rest of the derived global parameters
+        globals.SetDerived()
+
         fieldshapercornerTorus = geom.shapes.Torus("FieldShaperCorner",
                                                    rmin = globals.get("FieldShaperInnerRadius"),
-                                                   rmax = globals.get("FieldShaperOuterRadisu"),
+                                                   rmax = globals.get("FieldShaperOuterRadius"),
                                                    rtor = globals.get("FieldShaperTorRad"),
                                                    deltaphi = Q("90deg"),
                                                    startphi = Q("0deg"))
         fieldshaperlongTube = geom.shapes.Tubs("FieldShaperLongtube",
                                                rmin = globals.get("FieldShaperInnerRadius"),
                                                rmax = globals.get("FieldShaperOuterRadius"),
-                                               dz = globals.get("FieldShaperLongTubeLength"),
+                                               dz = 0.5*globals.get("FieldShaperLongTubeLength"),
                                                sphi = Q("0deg"),
                                                dphi = Q("360deg"))
         fieldshapershortTube = geom.shapes.Tubs("FieldShaperShorttube",
                                                 rmin = globals.get("FieldShaperInnerRadius"),
                                                 rmax = globals.get("FieldShaperOuterRadius"),
-                                                dz = globals.get("FieldShaperShortTubeLength"),
+                                                dz = 0.5*globals.get("FieldShaperShortTubeLength"),
                                                 sphi = Q("0deg"),
                                                 dphi = Q("360deg"))
         fieldshaperlongTubeSlim = geom.shapes.Tubs("FieldShaperLongtubeSlim",
                                                    rmin = globals.get("FieldShaperInnerRadius"),
                                                    rmax = globals.get("FieldShaperOuterRadiusSlim"),
-                                                   dz = globals.get("FieldShaperLongTubeLength"),
+                                                   dz = 0.5*globals.get("FieldShaperLongTubeLength"),
                                                    sphi = Q("0deg"),
                                                    dphi = Q("360deg"))
         fieldshapershortTubeSlim = self.constructShortTubeSlim(geom)
@@ -100,7 +100,7 @@ class FieldCageBuilder(gegede.builder.Builder):
         xz_positions = [(-torrad, 0.5*ltlength),
                         (-torrad - 0.5*stlength, 0.5*ltlength + torrad),
                         (-torrad -stlength, 0.5*ltlength),
-                        (-stlength - 2*torrad, 0),
+                        (-stlength - 2*torrad, Q('0cm')),
                         (-torrad -stlength, -0.5*ltlength),
                         (-torrad - 0.5*stlength, -0.5*ltlength - torrad),
                         (-torrad, -0.5*ltlength)
@@ -120,11 +120,11 @@ class FieldCageBuilder(gegede.builder.Builder):
             secondShape = fieldshapercornerTorus
             secondShapeSlim = fieldshapercornerTorus
             if ui % 2 == 0 and ui % 4 != 0:
-                secondShape = fieldshaperlongTube
-                secondShapeSlim = fieldshaperlongTubeSlim
-            elif ui % 2 == 0:
                 secondShape = fieldshapershortTube
                 secondShapeSlim = fieldshapershortTubeSlim
+            elif ui % 2 == 0:
+                secondShape = fieldshaperlongTube
+                secondShapeSlim = fieldshaperlongTubeSlim
 
             # follow perl-script naming convention
             fs_name = "FSunion"+str(ui)
@@ -135,7 +135,7 @@ class FieldCageBuilder(gegede.builder.Builder):
             pos_name = "esquinapos"+str(ui)
             pos_slim_name = "esquinapos"+str(ui+7) if ui < 4 else "esquinapos"+str(ui+6)
             if ui == 4:
-                pos_slim_name = "esquinapos4"
+                pos_slim_name = "esquinapos4Slim"
 
             unionShape = geom.shapes.Boolean(fs_name,
                                              type = 'union',
@@ -151,7 +151,7 @@ class FieldCageBuilder(gegede.builder.Builder):
                                                  type = 'union',
                                                  first = unionShapeSlim,
                                                  second = secondShapeSlim,
-                                                 pos = geom.structure.Position(pos_name,
+                                                 pos = geom.structure.Position(pos_slim_name,
                                                                                x = xz_positions[ui-1][0],
                                                                                y = Q('0cm'),
                                                                                z = xz_positions[ui-1][1]),
@@ -169,6 +169,3 @@ class FieldCageBuilder(gegede.builder.Builder):
         # add the volumes
         self.add_volume(fieldshaper_LV, fieldshaperSlim_LV)
         return
-
-
-

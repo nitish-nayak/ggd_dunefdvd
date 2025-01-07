@@ -36,29 +36,29 @@ class CryostatBuilder(gegede.builder.Builder):
 
         # get the shapes
         cryoBox = geom.shapes.Box(self.name,
-                                  dx = globals.get("Cryostat_x"),
-                                  dy = globals.get("Cryostat_y"),
-                                  dz = globals.get("Cryostat_z"))
+                                  dx = 0.5*globals.get("Cryostat_x"),
+                                  dy = 0.5*globals.get("Cryostat_y"),
+                                  dz = 0.5*globals.get("Cryostat_z"))
         arInteriorBox = geom.shapes.Box('ArgonInterior',
-                                        dx = globals.get("Argon_x"),
-                                        dy = globals.get("Argon_y"),
-                                        dz = globals.get("Argon_z"))
+                                        dx = 0.5*globals.get("Argon_x"),
+                                        dy = 0.5*globals.get("Argon_y"),
+                                        dz = 0.5*globals.get("Argon_z"))
         gasArBox = geom.shapes.Box('GaseousArgon',
-                                   dx = globals.get("HeightGaseousAr") - globals.get("anodePlateWidth"),
-                                   dy = globals.get("Argon_y"),
-                                   dz = globals.get("Argon_z"))
+                                   dx = 0.5*globals.get("HeightGaseousAr") - 0.5*globals.get("anodePlateWidth"),
+                                   dy = 0.5*globals.get("Argon_y"),
+                                   dz = 0.5*globals.get("Argon_z"))
         steelshellBox = geom.shapes.Boolean('SteelShell',
                                             type = 'subtraction',
                                             first = cryoBox,
                                             second = arInteriorBox)
         tpcencBox = geom.shapes.Box('TPCEnclosure',
-                                    dx = globals.get("TPCEnclosure_x"),
-                                    dy = globals.get("TPCEnclosure_y"),
-                                    dz = globals.get("TPCEnclosure_z"))
+                                    dx = 0.5*globals.get("TPCEnclosure_x"),
+                                    dy = 0.5*globals.get("TPCEnclosure_y"),
+                                    dz = 0.5*globals.get("TPCEnclosure_z"))
         anodePlateBox = geom.shapes.Box('AnodePlate',
-                                        dx = globals.get("anodePlateWidth"),
-                                        dy = globals.get("widthCathode"),
-                                        dz = globals.get("lengthCathode"))
+                                        dx = 0.5*globals.get("anodePlateWidth"),
+                                        dy = 0.5*globals.get("widthCathode"),
+                                        dz = 0.5*globals.get("lengthCathode"))
 
         # define the logical volumes
         cryo_LV = make_volume(geom, "LAr", cryoBox, aux=True)
@@ -81,7 +81,7 @@ class CryostatBuilder(gegede.builder.Builder):
         fsslim_LV = fs.get_volume("volFieldShaperSlim")
 
         # start placing things
-        gasar_x = 0.5*(globals.get("Argon_x")- globals.get("HeightGaseousAr") - globals.get("anodePlateWidth"))
+        gasar_x = 0.5*(globals.get("Argon_x")- globals.get("HeightGaseousAr") + globals.get("anodePlateWidth"))
         gasar_y = Q('0cm')
         gasar_z = Q('0cm')
         place_gasAr = geom.structure.Placement('place'+gasArBox.name,
@@ -161,14 +161,15 @@ class CryostatBuilder(gegede.builder.Builder):
                                                                                    x = pos_x,
                                                                                    y = pos_y,
                                                                                    z = pos_z))
-                place_bot = geom.structure.Placement('placeBot%s-%d' % (name, idx),
-                                                     volume = tpc_LV,
-                                                     pos = geom.structure.Position('posBot%s-%d' % (name, idx),
-                                                                                   x = posbottom_x,
-                                                                                   y = pos_y,
-                                                                                   z = pos_z))
                 tpcenc_LV.placements.append(place_top.name)
-                tpcenc_LV.placements.append(place_bot.name)
+                if globals.get("nCRM_x") == 2:
+                    place_bot = geom.structure.Placement('placeBot%s-%d' % (name, idx),
+                                                         volume = tpc_LV,
+                                                         pos = geom.structure.Position('posBot%s-%d' % (name, idx),
+                                                                                       x = posbottom_x,
+                                                                                       y = pos_y,
+                                                                                       z = pos_z))
+                    tpcenc_LV.placements.append(place_bot.name)
                 idx += 1
                 pos_y += globals.get("widthCRM")
             pos_z += globals.get("lengthCRM")
@@ -274,7 +275,7 @@ class CryostatBuilder(gegede.builder.Builder):
         pos_y = -0.5*globals.get("FieldShaperShortTubeLength") - globals.get("FieldShaperTorRad")
         pos_z = Q('0cm')
 
-        for i in range(globals.get("NFieldShapers")):
+        for i in range(int(globals.get("NFieldShapers").magnitude) + 1):
             dist = i*globals.get("FieldShaperSeparation")
             pos_x = 0.5*globals.get("Argon_x") - globals.get("HeightGaseousAr") -                                   \
                     (globals.get("driftTPCActive") + globals.get("ReadoutPlane")) +                                 \
@@ -315,7 +316,7 @@ class CryostatBuilder(gegede.builder.Builder):
         frCenter_x = 0.5*globals.get("Argon_x") - globals.get("HeightGaseousAr") -                                  \
                      0.5*globals.get("padWidth")
         frCenter_z = -19*0.5*globals.get("lengthCathode") +                                                         \
-                     (40 - globals.get("nCRM_z")*0.25*globals.get("lengthCathode"))
+                     (40 - globals.get("nCRM_z"))*0.25*globals.get("lengthCathode")
 
         name = re.sub(r'vol', '', arapuca_LV.name)
         for j in range(globals.get("nCRM_z")//2):
@@ -358,7 +359,7 @@ class CryostatBuilder(gegede.builder.Builder):
         frCenter_x = 0.5*globals.get("Argon_x") - globals.get("HeightGaseousAr") -                                  \
                      0.5*globals.get("padWidth")
         frCenter_z = -19*0.5*globals.get("lengthCathode") +                                                         \
-                     (40 - globals.get("nCRM_z")*0.25*globals.get("lengthCathode"))
+                     (40 - globals.get("nCRM_z"))*0.25*globals.get("lengthCathode")
 
         name = re.sub(r'vol', '', arapuca_LV.name)
         for j in range(2):
@@ -400,7 +401,7 @@ class CryostatBuilder(gegede.builder.Builder):
 
         frCenter_x = 0.5*globals.get("TPC_x") - 0.5*globals.get("padWidth")
         frCenter_z = -19*0.5*globals.get("lengthCathode") +                                                         \
-                     (40 - globals.get("nCRM_z")*0.25*globals.get("lengthCathode"))
+                     (40 - globals.get("nCRM_z"))*0.25*globals.get("lengthCathode")
 
         name = re.sub(r'vol', '', arapuca_LV.name)
         for j in range(globals.get("nCRM_z")//2):

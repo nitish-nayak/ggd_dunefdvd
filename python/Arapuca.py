@@ -25,17 +25,17 @@ class ArapucaBuilder(gegede.builder.Builder):
                  globals.get("ArapucaAcceptanceWindow_z"))
 
         arapucaEnclosureBox = geom.shapes.Box('ArapucaEnclosure',
-                                              dx = a_out[0],
-                                              dy = a_out[1],
-                                              dz = a_out[2])
+                                              dx = 0.5*a_out[0],
+                                              dy = 0.5*a_out[1],
+                                              dz = 0.5*a_out[2])
         arapucaOutBox = geom.shapes.Box('ArapucaOut',
-                                        dx = a_out[0] - Q('0.05cm'),
-                                        dy = a_out[1] - Q('0.05cm'),
-                                        dz = a_out[2] - Q('0.05cm'))
+                                        dx = 0.5*a_out[0] - Q('0.025cm'),
+                                        dy = 0.5*a_out[1] - Q('0.025cm'),
+                                        dz = 0.5*a_out[2] - Q('0.025cm'))
         arapucaInBox = geom.shapes.Box('ArapucaIn',
-                                       dx = globals.get("ArapucaIn_x"),
-                                       dy = a_out[1],
-                                       dz = globals.get("ArapucaIn_z"))
+                                       dx = 0.5*globals.get("ArapucaIn_x"),
+                                       dy = 0.5*a_out[1],
+                                       dz = 0.5*globals.get("ArapucaIn_z"))
         arapucaWallsBox = geom.shapes.Boolean('ArapucaWalls',
                                               type = 'subtraction',
                                               first = arapucaOutBox,
@@ -47,13 +47,13 @@ class ArapucaBuilder(gegede.builder.Builder):
                                               )
 
         arapucaAccBox = geom.shapes.Box('ArapucaAcceptanceWindow',
-                                        dx = a_acc[0],
-                                        dy = a_acc[1],
-                                        dz = a_acc[2])
+                                        dx = 0.5*a_acc[0],
+                                        dy = 0.5*a_acc[1],
+                                        dz = 0.5*a_acc[2])
         arapucaDoubleInBox = geom.shapes.Box('ArapucaDoubleIn',
-                                             dx = globals.get("ArapucaIn_x"),
-                                             dy = a_out[1] + Q('1.0cm'),
-                                             dz = globals.get("ArapucaIn_z"))
+                                             dx = 0.5*globals.get("ArapucaIn_x"),
+                                             dy = 0.5*a_out[1] + Q('0.5cm'),
+                                             dz = 0.5*globals.get("ArapucaIn_z"))
         arapucaDoubleWallsBox = geom.shapes.Boolean('ArapucaDoubleWalls',
                                                     type = 'subtraction',
                                                     first = arapucaOutBox,
@@ -64,9 +64,9 @@ class ArapucaBuilder(gegede.builder.Builder):
                                                                                   z = Q('0cm'))
                                                     )
         arapucaDoubleAccBox = geom.shapes.Box('ArapucaDoubleAcceptanceWindow',
-                                              dx = a_acc[0],
-                                              dy = a_out[1] - Q('0.02cm'),
-                                              dz = a_acc[2])
+                                              dx = 0.5*a_acc[0],
+                                              dy = 0.5*a_out[1] - Q('0.04cm'),
+                                              dz = 0.5*a_acc[2])
 
         # define all the sub-volumes
         opdetsens_LV = geom.structure.Volume('volOpDetSensitive',
@@ -83,7 +83,7 @@ class ArapucaBuilder(gegede.builder.Builder):
         self.add_volume(arapucaenc_LV)
 
         # now do the placements for each
-        arapucaenc_LV     = self.placeArapuca(arapucaenc_LV, arapuca_LV, opdetsens_LV,
+        arapucaenc_LV     = self.placeArapuca(geom, arapucaenc_LV, arapuca_LV, opdetsens_LV,
                                               opdet_pos = geom.structure.Position('opdetshift',
                                                                                   x = Q('0cm'),
                                                                                   y = 0.5*a_acc[1],
@@ -105,12 +105,12 @@ class ArapucaBuilder(gegede.builder.Builder):
             self.add_volume(arapucaenc2_LV)
 
             # now do the placements for each
-            arapucaenc2_LV     = self.placeArapuca(arapucaenc2_LV, arapuca2_LV, opdetsens2_LV,
+            arapucaenc2_LV     = self.placeArapuca(geom, arapucaenc2_LV, arapuca2_LV, opdetsens2_LV,
                                                    opdet_pos="posCenter")
         return
 
     # helper for arapuca placements
-    def placeArapuca(self, arapucaenc_LV, arapuca_LV, opdet_LV, opdet_pos, rotArapuca="rIdentity"):
+    def placeArapuca(self, geom, arapucaenc_LV, arapuca_LV, opdet_LV, opdet_pos, rotArapuca="rIdentity"):
         place1 = geom.structure.Placement('placearapuca_in'+arapucaenc_LV.name,
                                           volume = arapuca_LV,
                                           pos = "posCenter",
