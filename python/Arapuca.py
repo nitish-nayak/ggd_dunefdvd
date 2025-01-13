@@ -65,7 +65,7 @@ class ArapucaBuilder(gegede.builder.Builder):
                                                     )
         arapucaDoubleAccBox = geom.shapes.Box('ArapucaDoubleAcceptanceWindow',
                                               dx = 0.5*a_acc[0],
-                                              dy = 0.5*a_out[1] - Q('0.04cm'),
+                                              dy = 0.5*a_out[1] - Q('0.01cm'),
                                               dz = 0.5*a_acc[2])
 
         # define all the sub-volumes
