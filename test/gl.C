@@ -34,7 +34,7 @@ struct VolumeInfo {
     TString parentName;
     TString materialName;
     int count;
-    VolumeInfo(const TString& n, int d, const TString& p, const TString& m) : 
+    VolumeInfo(const TString& n, int d, const TString& p, const TString& m) :
         name(n), depth(d), parentName(p), materialName(m), count(1) {}
 };
 
@@ -53,12 +53,10 @@ static std::vector<NameMapping> gNameMappings;
 // Update printVolumeSummary function
 void printVolumeSummary() {
     std::map<int, std::vector<VolumeInfo>> depthMap;
-    
     // Group by depth
     for (const auto& pair : gVolumeInfoMap) {
         depthMap[pair.second.depth].push_back(pair.second);
     }
-    
     // Print by depth level
     for (const auto& depthPair : depthMap) {
         cout << "\n=== Depth Level " << depthPair.first << " ===" << endl;
@@ -96,19 +94,23 @@ TString getMappedName(const TString& originalName) {
 // Modified traversal function with target parameter
 void traverseNode(TGeoNode* node, const TString& targetVolume, const TString& specialVolume, int depth = 0) {
     if (!node) return;
-    
     TString originalName(node->GetName());
     TString mappedName = getMappedName(originalName);
     TString parentName = node->GetMotherVolume() ? 
                         getMappedName(node->GetMotherVolume()->GetName()) : 
                         "none";
     
+    TString originalName(node->GetName());
+    TString mappedName = getMappedName(originalName);
+    TString parentName = node->GetMotherVolume() ?
+                        getMappedName(node->GetMotherVolume()->GetName()) :
+                        "none";
+
     // Get material information
     TString materialName = "unknown";
     if (node->GetVolume() && node->GetVolume()->GetMaterial()) {
         materialName = node->GetVolume()->GetMaterial()->GetName();
     }
-    
     // Store volume information with mapped name and material
     if (depth <= gPrintLevel && gPrint) {
         auto it = gVolumeInfoMap.find(mappedName);
@@ -118,7 +120,6 @@ void traverseNode(TGeoNode* node, const TString& targetVolume, const TString& sp
             gVolumeInfoMap.emplace(mappedName, VolumeInfo(mappedName, depth, parentName, materialName));
         }
     }
-    
     // Use original name for other checks
     if (!gSpecialNodeFound && originalName.Contains(specialVolume)) {
         gSpecialNode = node;
@@ -134,7 +135,6 @@ void traverseNode(TGeoNode* node, const TString& targetVolume, const TString& sp
             node->SetAllInvisible();
         }
     }
-        
     // Check if this is our target volume
     if (originalName.Contains(targetVolume) && !gVolumeAdded ) {
         TEveGeoTopNode* top = new TEveGeoTopNode(gGeoManager, node);
@@ -155,58 +155,47 @@ void gl()
 {
     gSystem->IgnoreSignal(kSigSegmentationViolation, true);
     TEveManager::Create();
-    // TGeoManager::Import("lbne35t4apa.gdml");
-    // TGeoManager::Import("lbne35t4apa_v3_nowires.gdml");
-    // TGeoManager::Import("lbne35t4apa_v3.gdml");
-    TGeoManager::Import("protodune.gdml");
+    TGeoManager::Import("dunevd_v6.gdml");
 
     TGeoNode* world = gGeoManager->GetTopNode();
-    
+
     // Define target volume name to be printed by the main gEve ...
     //TString targetVolume = "volTPC_1";  // Change this to your desired volume name
-    TString targetVolume = "cryostat_volume";
-    //TString targetVolume = "detenclosure";
-    //TString targetVolume = "volPMT_coated";
-    //TString targetVolume = "volArapucaMesh";
-
-    // Define special volume to draw with ogl
-    TString specialVolume = "volTPC_1";  // Change this to your desired special volume
+    TString targetVolume = "volCryostat";
+    TString specialVolume = "volTPC";  // Change this to your desired special volume
 
     // Initialize invisible patterns with flags
-    gInvisiblePatterns = {
-        // InvisiblePattern("Foam", true),
-        InvisiblePattern("Steel", false),
-        InvisiblePattern("cryostat_steel", false),
-        InvisiblePattern("argon", false)
-    };
+    // gInvisiblePatterns = {
+    //     // InvisiblePattern("Foam", true),
+    //     InvisiblePattern("Steel", false),
+    //     InvisiblePattern("cryostat_steel", false),
+    //     InvisiblePattern("argon", false)
+    // };
 
     // Initialize name mappings
-    gNameMappings = {
-        NameMapping("volTPCWireV", "TPC_Wire_V"),
-        NameMapping("volTPCWireU", "TPC_Wire_U"),
-        //NameMapping("volTPC_", "TPC"),
-        NameMapping("volCathodeArapucaMeshRod_","volCathodeArapucaMeshRod")
-        // Add more mappings as needed
-    };
-
+    // gNameMappings = {
+    //     // NameMapping("volTPCWireV", "TPC_Wire_V"),
+    //     // NameMapping("volTPCWireU", "TPC_Wire_U"),
+    //     //NameMapping("volTPC_", "TPC"),
+    //     // NameMapping("volCathodeArapucaMeshRod_","volCathodeArapucaMeshRod")
+    //     // Add more mappings as needed
+    // };
     // Reset all flags and pointers
     gSpecialNode = nullptr;
     gSpecialNodeFound = false;
     gVolumeAdded = false;
     gPreviousName = "";
     gNameCounter = 0;
-    
     // Clear volume info map before starting
     gVolumeInfoMap.clear();
-    
+
     // Search for volumes
     traverseNode(world, targetVolume, specialVolume);
-    
+
     // Print volume summary
     if (gPrint) {
         printVolumeSummary();
     }
-    
     // Draw special volume if found
     if (gSpecialNode) {
         gSpecialNode->Draw("ogl");
@@ -217,7 +206,6 @@ void gl()
         // v->SetLineScale(0.5);
         // v->UpdateScene();
     }
-    
     // Redraw the scene
     gEve->Redraw3D(kTRUE);
 }

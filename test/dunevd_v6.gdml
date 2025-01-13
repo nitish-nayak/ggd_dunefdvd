@@ -1029,44 +1029,44 @@
     <position unit="cm" name="posTPCEnclosure" x="-1.9949999999999954" y="0" z="0"/>
     <position unit="cm" name="posArapuca0-Lat0" x="285.03000000000003" y="-743.8024" z="-298.84000000000015"/>
     <position unit="cm" name="posArapuca1-Lat0" x="210.03000000000003" y="-743.8024" z="-298.84000000000015"/>
-    <position unit="cm" name="posArapuca2-Lat0" x="210.03000000000003" y="-743.8024" z="-298.84000000000015"/>
-    <position unit="cm" name="posArapuca3-Lat0" x="210.03000000000003" y="-743.8024" z="-298.84000000000015"/>
+    <position unit="cm" name="posArapuca2-Lat0" x="135.03000000000003" y="-743.8024" z="-298.84000000000015"/>
+    <position unit="cm" name="posArapuca3-Lat0" x="60.03000000000003" y="-743.8024" z="-298.84000000000015"/>
     <position unit="cm" name="posArapuca4-Lat0" x="285.03000000000003" y="743.8024" z="-298.84000000000015"/>
     <position unit="cm" name="posArapuca5-Lat0" x="210.03000000000003" y="743.8024" z="-298.84000000000015"/>
-    <position unit="cm" name="posArapuca6-Lat0" x="210.03000000000003" y="743.8024" z="-298.84000000000015"/>
-    <position unit="cm" name="posArapuca7-Lat0" x="210.03000000000003" y="743.8024" z="-298.84000000000015"/>
+    <position unit="cm" name="posArapuca6-Lat0" x="135.03000000000003" y="743.8024" z="-298.84000000000015"/>
+    <position unit="cm" name="posArapuca7-Lat0" x="60.03000000000003" y="743.8024" z="-298.84000000000015"/>
     <position unit="cm" name="posArapuca0-Lat1" x="285.03000000000003" y="-743.8024" z="-1.1368683772161603e-13"/>
     <position unit="cm" name="posArapuca1-Lat1" x="210.03000000000003" y="-743.8024" z="-1.1368683772161603e-13"/>
-    <position unit="cm" name="posArapuca2-Lat1" x="210.03000000000003" y="-743.8024" z="-1.1368683772161603e-13"/>
-    <position unit="cm" name="posArapuca3-Lat1" x="210.03000000000003" y="-743.8024" z="-1.1368683772161603e-13"/>
+    <position unit="cm" name="posArapuca2-Lat1" x="135.03000000000003" y="-743.8024" z="-1.1368683772161603e-13"/>
+    <position unit="cm" name="posArapuca3-Lat1" x="60.03000000000003" y="-743.8024" z="-1.1368683772161603e-13"/>
     <position unit="cm" name="posArapuca4-Lat1" x="285.03000000000003" y="743.8024" z="-1.1368683772161603e-13"/>
     <position unit="cm" name="posArapuca5-Lat1" x="210.03000000000003" y="743.8024" z="-1.1368683772161603e-13"/>
-    <position unit="cm" name="posArapuca6-Lat1" x="210.03000000000003" y="743.8024" z="-1.1368683772161603e-13"/>
-    <position unit="cm" name="posArapuca7-Lat1" x="210.03000000000003" y="743.8024" z="-1.1368683772161603e-13"/>
+    <position unit="cm" name="posArapuca6-Lat1" x="135.03000000000003" y="743.8024" z="-1.1368683772161603e-13"/>
+    <position unit="cm" name="posArapuca7-Lat1" x="60.03000000000003" y="743.8024" z="-1.1368683772161603e-13"/>
     <position unit="cm" name="posArapuca0-Lat2" x="285.03000000000003" y="-743.8024" z="298.8399999999999"/>
     <position unit="cm" name="posArapuca1-Lat2" x="210.03000000000003" y="-743.8024" z="298.8399999999999"/>
-    <position unit="cm" name="posArapuca2-Lat2" x="210.03000000000003" y="-743.8024" z="298.8399999999999"/>
-    <position unit="cm" name="posArapuca3-Lat2" x="210.03000000000003" y="-743.8024" z="298.8399999999999"/>
+    <position unit="cm" name="posArapuca2-Lat2" x="135.03000000000003" y="-743.8024" z="298.8399999999999"/>
+    <position unit="cm" name="posArapuca3-Lat2" x="60.03000000000003" y="-743.8024" z="298.8399999999999"/>
     <position unit="cm" name="posArapuca4-Lat2" x="285.03000000000003" y="743.8024" z="298.8399999999999"/>
     <position unit="cm" name="posArapuca5-Lat2" x="210.03000000000003" y="743.8024" z="298.8399999999999"/>
-    <position unit="cm" name="posArapuca6-Lat2" x="210.03000000000003" y="743.8024" z="298.8399999999999"/>
-    <position unit="cm" name="posArapuca7-Lat2" x="210.03000000000003" y="743.8024" z="298.8399999999999"/>
+    <position unit="cm" name="posArapuca6-Lat2" x="135.03000000000003" y="743.8024" z="298.8399999999999"/>
+    <position unit="cm" name="posArapuca7-Lat2" x="60.03000000000003" y="743.8024" z="298.8399999999999"/>
     <position unit="cm" name="posArapuca0-ShortLat0" x="285.03000000000003" y="-220" z="-545.26"/>
     <position unit="cm" name="posArapuca1-ShortLat0" x="210.03000000000003" y="-220" z="-545.26"/>
-    <position unit="cm" name="posArapuca2-ShortLat0" x="210.03000000000003" y="-220" z="-545.26"/>
-    <position unit="cm" name="posArapuca3-ShortLat0" x="210.03000000000003" y="-220" z="-545.26"/>
+    <position unit="cm" name="posArapuca2-ShortLat0" x="135.03000000000003" y="-220" z="-545.26"/>
+    <position unit="cm" name="posArapuca3-ShortLat0" x="60.03000000000003" y="-220" z="-545.26"/>
     <position unit="cm" name="posArapuca4-ShortLat0" x="285.03000000000003" y="-220" z="545.26"/>
     <position unit="cm" name="posArapuca5-ShortLat0" x="210.03000000000003" y="-220" z="545.26"/>
-    <position unit="cm" name="posArapuca6-ShortLat0" x="210.03000000000003" y="-220" z="545.26"/>
-    <position unit="cm" name="posArapuca7-ShortLat0" x="210.03000000000003" y="-220" z="545.26"/>
+    <position unit="cm" name="posArapuca6-ShortLat0" x="135.03000000000003" y="-220" z="545.26"/>
+    <position unit="cm" name="posArapuca7-ShortLat0" x="60.03000000000003" y="-220" z="545.26"/>
     <position unit="cm" name="posArapuca0-ShortLat1" x="285.03000000000003" y="220" z="-545.26"/>
     <position unit="cm" name="posArapuca1-ShortLat1" x="210.03000000000003" y="220" z="-545.26"/>
-    <position unit="cm" name="posArapuca2-ShortLat1" x="210.03000000000003" y="220" z="-545.26"/>
-    <position unit="cm" name="posArapuca3-ShortLat1" x="210.03000000000003" y="220" z="-545.26"/>
+    <position unit="cm" name="posArapuca2-ShortLat1" x="135.03000000000003" y="220" z="-545.26"/>
+    <position unit="cm" name="posArapuca3-ShortLat1" x="60.03000000000003" y="220" z="-545.26"/>
     <position unit="cm" name="posArapuca4-ShortLat1" x="285.03000000000003" y="220" z="545.26"/>
     <position unit="cm" name="posArapuca5-ShortLat1" x="210.03000000000003" y="220" z="545.26"/>
-    <position unit="cm" name="posArapuca6-ShortLat1" x="210.03000000000003" y="220" z="545.26"/>
-    <position unit="cm" name="posArapuca7-ShortLat1" x="210.03000000000003" y="220" z="545.26"/>
+    <position unit="cm" name="posArapuca6-ShortLat1" x="135.03000000000003" y="220" z="545.26"/>
+    <position unit="cm" name="posArapuca7-ShortLat1" x="60.03000000000003" y="220" z="545.26"/>
     <position unit="cm" name="posFieldShaper_00" x="-322.04" y="-675.1024" z="0"/>
     <position unit="cm" name="posFieldShaper_01" x="-316.04" y="-675.1024" z="0"/>
     <position unit="cm" name="posFieldShaper_02" x="-310.04" y="-675.1024" z="0"/>
@@ -2249,7 +2249,7 @@
       <positionref ref="posArapucaDoubleSub"/>
       <rotationref ref="identity"/>
     </subtraction>
-    <box name="ArapucaDoubleAcceptanceWindow" lunit="cm" x="60.0" y="2.42" z="60.0"/>
+    <box name="ArapucaDoubleAcceptanceWindow" lunit="cm" x="60.0" y="2.48" z="60.0"/>
     <box name="CathodeBlock" lunit="cm" x="4.0" y="336.4012" z="298.84000000000003"/>
     <box name="CathodeVoid" lunit="cm" x="5.0" y="76.35" z="67.0"/>
     <subtraction name="Cathode1">
