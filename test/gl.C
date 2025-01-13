@@ -100,12 +100,6 @@ void traverseNode(TGeoNode* node, const TString& targetVolume, const TString& sp
                         getMappedName(node->GetMotherVolume()->GetName()) : 
                         "none";
     
-    TString originalName(node->GetName());
-    TString mappedName = getMappedName(originalName);
-    TString parentName = node->GetMotherVolume() ?
-                        getMappedName(node->GetMotherVolume()->GetName()) :
-                        "none";
-
     // Get material information
     TString materialName = "unknown";
     if (node->GetVolume() && node->GetVolume()->GetMaterial()) {
