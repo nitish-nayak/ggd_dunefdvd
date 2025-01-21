@@ -74,8 +74,9 @@ class WiresBuilder(gegede.builder.Builder):
                 zpos = (ch + 0.5*(1 - nch))*pitch
                 self.winfos[plane].append(['', zpos, 0., length])
         else:
-            length = globals.get("TPCActive_z").magnitude
-            width = 0.
+            length = globals.get("TPCActive_z").magnitude - 0.02
+            width = globals.get("TPCActive_y").magnitude - 0.02
+            #  width = 0.
             nch = nchs['Ind1'] if plane == 'U' else nchs['Ind2']
             nchb = nchs['Ind1Bot']
             # Wire and pitch direction unit vectors
@@ -83,15 +84,15 @@ class WiresBuilder(gegede.builder.Builder):
             dirp = [cos(theta - pi/2), sin(theta - pi/2)]
 
             # Alpha is angle for pitch calculations
-            alpha = theta if theta <= pi/2 else pi - theta
-
-            # Calculate wire spacing
-            dX = pitch / sin(alpha)
-            dY = pitch / sin(pi/2 - alpha)
-            if length <= 0:
-                length = dX * nchb
-            if width <= 0:
-                width = dY * (nch - nchb)
+            #  alpha = theta if theta <= pi/2 else pi - theta
+            #
+            #  # Calculate wire spacing
+            #  dX = pitch / sin(alpha)
+            #  dY = pitch / sin(pi/2 - alpha)
+            #  if length <= 0:
+            #      length = dX * nchb
+            #  if width <= 0:
+            #      width = dY * (nch - nchb)
 
             # Starting point adjusted for direction
             orig = [0, 0]
